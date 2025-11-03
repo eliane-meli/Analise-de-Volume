@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Análise de Volume</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/locale/pt-br.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --info: #4895ef;
+            --warning: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --background: #f5f7fb;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --text-light: #6c757d;
+            --border: #dee2e6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 0;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .description {
+            font-size: 1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .date-filter {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .date-filter select {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px 15px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid var(--primary);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card h3 {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .chart-container {
+            height: 300px;
+            margin-top: 10px;
+            position: relative;
+        }
+
+        .error {
+            background-color: #ffeaea;
+            color: #dc3545;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            border-left: 4px solid #dc3545;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .data-table th, .data-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .data-table tr:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            color: var(--text-light);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .insight-card {
+            background: linear-gradient(135deg, var(--info), var(--success));
+            color: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .insight-card h3 {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        .status-connected {
+            background-color: #28a745;
+        }
+
+        .file-input-container {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-container input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .date-filter {
+                justify-content: center;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            .chart-container {
+                height: 250px;
+            }
+            
+            .data-table {
+                font-size: 0.8rem;
+            }
+            
+            .data-table th, .data-table td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-chart-line"></i> Dashboard de Análise de Volume</h1>
+            <p class="description">
+                <span id="connection-status" class="status-indicator status-connected"></span>
+                Dashboard interativo para análise de dados de volume
+                <div class="connection-info" id="connection-info">Pronto para análise</div>
+            </p>
+        </header>
+        
+        <div class="controls">
+            <button id="refresh-btn" class="btn">
+                <i class="fas fa-sync-alt"></i> Atualizar
+            </button>
+            <div class="date-filter">
+                <select id="month-filter">
+                    <option value="">Todos os meses</option>
+                    <option value="1">Janeiro</option>
+                    <option value="2">Fevereiro</option>
+                    <option value="3">Março</option>
+                    <option value="4">Abril</option>
+                    <option value="5">Maio</option>
+                    <option value="6">Junho</option>
+                    <option value="7">Julho</option>
+                    <option value="8">Agosto</option>
+                    <option value="9">Setembro</option>
+                    <option value="10">Outubro</option>
+                    <option value="11">Novembro</option>
+                    <option value="12">Dezembro</option>
+                </select>
+                <select id="year-filter">
+                    <option value="">Todos os anos</option>
+                </select>
+            </div>
+            <div class="file-input-container">
+                <button id="upload-btn" class="btn">
+                    <i class="fas fa-upload"></i> CSV
+                </button>
+                <input type="file" id="file-input" accept=".csv">
+            </div>
+            <button id="export-btn" class="btn">
+                <i class="fas fa-download"></i> Exportar
+            </button>
+        </div>
+        
+        <div id="error-message" class="error" style="display: none;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p id="error-text"></p>
+        </div>
+        
+        <div id="dashboard">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Volume Total</h3>
+                    <div class="stat-value" id="total-expedido">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Média Diária</h3>
+                    <div class="stat-value" id="media-diaria">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Melhor Dia</h3>
+                    <div class="stat-value" id="dia-maior-volume">-</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Melhor Mês</h3>
+                    <div class="stat-value" id="mes-maior-volume">-</div>
+                </div>
+            </div>
+            
+            <div class="dashboard">
+                <div class="card">
+                    <h2><i class="fas fa-chart-line"></i> Tendência por Data</h2>
+                    <div class="chart-container">
+                        <canvas id="volume-trend-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2><i class="fas fa-calendar-week"></i> Volume por Dia</h2>
+                    <div class="chart-container">
+                        <canvas id="weekday-volume-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2><i class="fas fa-calendar-alt"></i> Volume por Mês</h2>
+                    <div class="chart-container">
+                        <canvas id="monthly-volume-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2><i class="fas fa-chart-bar"></i> Frequência de Aumento</h2>
+                    <div class="chart-container">
+                        <canvas id="increase-frequency-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-lightbulb"></i> Insights</h2>
+                <div id="trend-summary"></div>
+                
+                <div class="insight-card">
+                    <h3><i class="fas fa-chart-line"></i> Recomendações</h3>
+                    <div id="recommendations"></div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-table"></i> Dados Detalhados</h2>
+                <div style="overflow-x: auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Volume</th>
+                                <th>Dia</th>
+                                <th>Mês/Ano</th>
+                                <th>Variação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data-table-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Dashboard de Análise de Volume &copy; 2023 - <a href="#" style="color: var(--primary);" onclick="showInstructions()">Como usar</a></p>
+    </footer>
+
+    <script>
+        // Elementos da DOM
+        const errorElement = document.getElementById('error-message');
+        const errorTextElement = document.getElementById('error-text');
+        const refreshButton = document.getElementById('refresh-btn');
+        const exportButton = document.getElementById('export-btn');
+        const uploadButton = document.getElementById('upload-btn');
+        const fileInput = document.getElementById('file-input');
+        const monthFilter = document.getElementById('month-filter');
+        const yearFilter = document.getElementById('year-filter');
+        const connectionStatus = document.getElementById('connection-status');
+        const connectionInfo = document.getElementById('connection-info');
+        
+        // Dados em memória
+        let allData = [];
+        let filteredData = [];
+        let charts = {};
+        
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            moment.locale('pt-br');
+            loadData();
+            
+            // Eventos
+            refreshButton.addEventListener('click', loadData);
+            exportButton.addEventListener('click', exportReport);
+            uploadButton.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', handleFileUpload);
+            monthFilter.addEventListener('change', applyFilters);
+            yearFilter.addEventListener('change', applyFilters);
+        });
+
+        // Instruções de uso
+        function showInstructions() {
+            alert(`COMO USAR ESTE DASHBOARD:
+
+📊 DADOS DE EXEMPLO:
+- O dashboard já vem com dados realistas
+- Clique em "Atualizar" para regenerar
+
+📁 CARREGAR SEUS DADOS:
+- Use o botão "CSV" para carregar seu arquivo
+- Formato necessário: colunas "Data" e "Volume"
+- Datas no formato: DD/MM/AAAA ou AAAA-MM-DD
+
+🔍 FILTRAR:
+- Use os menus para filtrar por mês e ano
+- Selecione "Todos" para ver dados completos
+
+💾 EXPORTAR:
+- Use "Exportar" para baixar relatório em JSON
+
+📱 RESPONSIVO:
+- Funciona em celulares e tablets`);
+        }
+        
+        function loadData() {
+            hideError();
+            updateConnectionStatus(true, 'Carregando dados...');
+            
+            try {
+                allData = generateRealisticSampleData();
+                populateYearFilter();
+                applyFilters();
+                updateConnectionStatus(true, 'Dados carregados');
+            } catch (error) {
+                console.error('Erro:', error);
+                showError('Erro ao carregar dados: ' + error.message);
+            }
+        }
+        
+        function generateRealisticSampleData() {
+            const data = [];
+            const startDate = new Date('2023-01-01');
+            const endDate = new Date('2023-12-31');
+            const weekdays = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+            
+            let currentDate = new Date(startDate);
+            let previousVolume = 850;
+            
+            const seasonalPatterns = {0: 0.7, 1: 1.2, 2: 1.1, 3: 1.0, 4: 1.05, 5: 0.9, 6: 0.8};
+            const monthlyPatterns = {0: 0.9, 1: 0.85, 2: 0.95, 3: 1.0, 4: 1.1, 5: 1.15, 6: 1.05, 7: 1.2, 8: 1.25, 9: 1.3, 10: 1.35, 11: 1.4};
+            
+            while (currentDate <= endDate) {
+                const dayOfWeek = currentDate.getDay();
+                const month = currentDate.getMonth();
+                
+                let baseVariation = (Math.random() - 0.3) * 80;
+                let volume = Math.max(200, previousVolume + baseVariation);
+                
+                volume *= seasonalPatterns[dayOfWeek];
+                volume *= monthlyPatterns[month];
+                
+                previousVolume = volume;
+                
+                data.push({
+                    date: new Date(currentDate),
+                    volume: Math.round(volume),
+                    days: Math.floor(Math.random() * 3) + 1,
+                    weekday: weekdays[dayOfWeek],
+                    dayOfWeek: dayOfWeek,
+                    month: month + 1,
+                    year: currentDate.getFullYear(),
+                    monthYear: `${(month + 1).toString().padStart(2, '0')}/${currentDate.getFullYear()}`
+                });
+                
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            
+            return data;
+        }
+        
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            hideError();
+            updateConnectionStatus(false, 'Processando arquivo...');
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const content = e.target.result;
+                    const processedData = processFileData(content, file.name);
+                    
+                    if (processedData && processedData.length > 0) {
+                        allData = processedData;
+                        populateYearFilter();
+                        applyFilters();
+                        updateConnectionStatus(true, 'Dados carregados');
+                    } else {
+                        throw new Error('Nenhum dado válido encontrado');
+                    }
+                } catch (error) {
+                    showError('Erro: ' + error.message);
+                    loadData();
+                }
+            };
+            
+            reader.onerror = function() {
+                showError('Erro ao ler arquivo');
+                loadData();
+            };
+            
+            if (file.name.endsWith('.csv')) {
+                reader.readAsText(file);
+            } else {
+                showError('Use arquivo CSV');
+                loadData();
+            }
+        }
+        
+        function processFileData(content, fileName) {
+            const weekdays = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+            const processedData = [];
+            
+            if (fileName.endsWith('.csv')) {
+                const lines = content.split('\n').filter(line => line.trim() !== '');
+                const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+                
+                const dateIndex = headers.findIndex(h => h.toLowerCase().includes('data'));
+                const volumeIndex = headers.findIndex(h => 
+                    h.toLowerCase().includes('qntd') || h.toLowerCase().includes('volume') || 
+                    h.toLowerCase().includes('expedida') || h.toLowerCase().includes('quantidade'));
+                
+                if (dateIndex === -1 || volumeIndex === -1) {
+                    throw new Error('Colunas "Data" e "Volume" são obrigatórias');
+                }
+                
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+                    
+                    const values = parseCSVLine(line);
+                    let date;
+                    
+                    try {
+                        const dateStr = values[dateIndex].replace(/"/g, '').trim();
+                        
+                        if (dateStr.includes('/')) {
+                            const parts = dateStr.split('/');
+                            if (parts.length === 3) {
+                                if (parts[2].length === 4) {
+                                    date = new Date(parts[2], parts[1] - 1, parts[0]);
+                                } else if (parts[0].length === 4) {
+                                    date = new Date(parts[0], parts[1] - 1, parts[2]);
+                                }
+                            }
+                        } else if (dateStr.includes('-')) {
+                            date = new Date(dateStr);
+                        }
+                    } catch (e) {
+                        continue;
+                    }
+                    
+                    if (!date || isNaN(date.getTime())) continue;
+                    
+                    const volume = parseFloat(values[volumeIndex].replace(/"/g, '')) || 0;
+                    if (volume <= 0) continue;
+                    
+                    const month = date.getMonth() + 1;
+                    const year = date.getFullYear();
+                    const dayOfWeek = date.getDay();
+                    
+                    processedData.push({
+                        date: date,
+                        volume: volume,
+                        days: 1,
+                        weekday: weekdays[dayOfWeek],
+                        dayOfWeek: dayOfWeek,
+                        month: month,
+                        year: year,
+                        monthYear: `${month.toString().padStart(2, '0')}/${year}`
+                    });
+                }
+            }
+            
+            return processedData;
+        }
+        
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current);
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            
+            result.push(current);
+            return result;
+        }
+        
+        function updateConnectionStatus(connected, message) {
+            if (connected) {
+                connectionStatus.className = 'status-indicator status-connected';
+            } else {
+                connectionStatus.className = 'status-indicator status-disconnected';
+            }
+            connectionInfo.textContent = message;
+        }
+        
+        function populateYearFilter() {
+            const years = [...new Set(allData.map(item => item.year))].sort();
+            yearFilter.innerHTML = '<option value="">Todos os anos</option>';
+            
+            years.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearFilter.appendChild(option);
+            });
+        }
+        
+        function applyFilters() {
+            const selectedMonth = monthFilter.value;
+            const selectedYear = yearFilter.value;
+            
+            filteredData = allData.filter(item => {
+                let match = true;
+                if (selectedMonth) match = match && item.month.toString() === selectedMonth;
+                if (selectedYear) match = match && item.year.toString() === selectedYear;
+                return match;
+            });
+            
+            if (filteredData.length === 0) {
+                showError('Nenhum dado com esses filtros');
+            } else {
+                hideError();
+                updateDashboard();
+            }
+        }
+        
+        function updateDashboard() {
+            const analysis = analyzeData(filteredData);
+            displayStats(analysis);
+            createCharts(analysis);
+            generateTrendSummary(analysis);
+            populateDataTable(filteredData);
+        }
+        
+        function analyzeData(data) {
+            if (data.length === 0) return {};
+            
+            const totalVolume = data.reduce((sum, item) => sum + item.volume, 0);
+            const averageDaily = totalVolume / data.length;
+            
+            const weekdayStats = {};
+            data.forEach(item => {
+                if (!weekdayStats[item.dayOfWeek]) {
+                    weekdayStats[item.dayOfWeek] = { total: 0, count: 0 };
+                }
+                weekdayStats[item.dayOfWeek].total += item.volume;
+                weekdayStats[item.dayOfWeek].count++;
+            });
+            
+            const weekdayAverages = {};
+            Object.keys(weekdayStats).forEach(weekday => {
+                weekdayAverages[weekday] = weekdayStats[weekday].total / weekdayStats[weekday].count;
+            });
+            
+            const monthlyStats = {};
+            data.forEach(item => {
+                if (!monthlyStats[item.monthYear]) {
+                    monthlyStats[item.monthYear] = { total: 0, count: 0 };
+                }
+                monthlyStats[item.monthYear].total += item.volume;
+                monthlyStats[item.monthYear].count++;
+            });
+            
+            const monthlyAverages = {};
+            Object.keys(monthlyStats).forEach(month => {
+                monthlyAverages[month] = monthlyStats[month].total / monthlyStats[month].count;
+            });
+            
+            let maxWeekdayVolume = 0;
+            let maxWeekday = null;
+            Object.keys(weekdayAverages).forEach(weekday => {
+                if (weekdayAverages[weekday] > maxWeekdayVolume) {
+                    maxWeekdayVolume = weekdayAverages[weekday];
+                    maxWeekday = parseInt(weekday);
+                }
+            });
+            
+            let maxMonthlyVolume = 0;
+            let maxMonth = null;
+            Object.keys(monthlyAverages).forEach(month => {
+                if (monthlyAverages[month] > maxMonthlyVolume) {
+                    maxMonthlyVolume = monthlyAverages[month];
+                    maxMonth = month;
+                }
+            });
+            
+            const increaseByWeekday = {};
+            let previousVolume = null;
+            const sortedData = [...data].sort((a, b) => a.date - b.date);
+            
+            sortedData.forEach((item, index) => {
+                if (index > 0 && previousVolume !== null && item.volume > previousVolume) {
+                    if (!increaseByWeekday[item.dayOfWeek]) {
+                        increaseByWeekday[item.dayOfWeek] = 0;
+                    }
+                    increaseByWeekday[item.dayOfWeek]++;
+                }
+                previousVolume = item.volume;
+            });
+            
+            let maxIncreaseFrequency = 0;
+            let maxIncreaseWeekday = null;
+            Object.keys(increaseByWeekday).forEach(weekday => {
+                if (increaseByWeekday[weekday] > maxIncreaseFrequency) {
+                    maxIncreaseFrequency = increaseByWeekday[weekday];
+                    maxIncreaseWeekday = parseInt(weekday);
+                }
+            });
+            
+            return {
+                totalVolume,
+                averageDaily,
+                maxWeekday: { day: maxWeekday, volume: maxWeekdayVolume },
+                maxMonth: { month: maxMonth, volume: maxMonthlyVolume },
+                weekdayAverages,
+                monthlyAverages,
+                increaseByWeekday,
+                maxIncreaseWeekday: { day: maxIncreaseWeekday, frequency: maxIncreaseFrequency },
+                rawData: sortedData
+            };
+        }
+        
+        function displayStats(analysis) {
+            document.getElementById('total-expedido').textContent = analysis.totalVolume.toLocaleString('pt-BR');
+            document.getElementById('media-diaria').textContent = analysis.averageDaily.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
+            
+            const weekdayNames = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+            document.getElementById('dia-maior-volume').textContent = 
+                analysis.maxWeekday.day !== null ? weekdayNames[analysis.maxWeekday.day] : '-';
+            document.getElementById('mes-maior-volume').textContent = analysis.maxMonth.month || '-';
+        }
+        
+        function createCharts(analysis) {
+            const weekdayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+            
+            Object.values(charts).forEach(chart => {
+                if (chart) chart.destroy();
+            });
+            
+            // Gráfico de tendência
+            const trendCtx = document.getElementById('volume-trend-chart').getContext('2d');
+            const dates = analysis.rawData.map(item => moment(item.date).format('DD/MM'));
+            const volumes = analysis.rawData.map(item => item.volume);
+            
+            const step = Math.max(1, Math.floor(dates.length / 15));
+            const displayDates = dates.filter((_, index) => index % step === 0);
+            const displayVolumes = volumes.filter((_, index) => index % step === 0);
+            
+            charts.trend = new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: displayDates,
+                    datasets: [{
+                        label: 'Volume',
+                        data: displayVolumes,
+                        borderColor: '#4361ee',
+                        backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: true } },
+                    scales: {
+                        x: { title: { display: true, text: 'Data' } },
+                        y: { beginAtZero: true, title: { display: true, text: 'Volume' } }
+                    }
+                }
+            });
+            
+            // Gráfico dia da semana
+            const weekdayCtx = document.getElementById('weekday-volume-chart').getContext('2d');
+            const weekdayLabels = [0,1,2,3,4,5,6].map(day => weekdayNames[day]);
+            const weekdayData = [0,1,2,3,4,5,6].map(day => analysis.weekdayAverages[day] || 0);
+            
+            charts.weekday = new Chart(weekdayCtx, {
+                type: 'bar',
+                data: {
+                    labels: weekdayLabels,
+                    datasets: [{
+                        label: 'Volume Médio',
+                        data: weekdayData,
+                        backgroundColor: 'rgba(67, 97, 238, 0.7)',
+                        borderColor: 'rgb(67, 97, 238)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Volume' } }
+                    }
+                }
+            });
+            
+            // Gráfico mensal
+            const monthlyCtx = document.getElementById('monthly-volume-chart').getContext('2d');
+            const monthlyLabels = Object.keys(analysis.monthlyAverages).sort();
+            const monthlyData = monthlyLabels.map(month => analysis.monthlyAverages[month]);
+            
+            charts.monthly = new Chart(monthlyCtx, {
+                type: 'bar',
+                data: {
+                    labels: monthlyLabels,
+                    datasets: [{
+                        label: 'Volume Médio',
+                        data: monthlyData,
+                        backgroundColor: 'rgba(76, 201, 240, 0.7)',
+                        borderColor: 'rgb(76, 201, 240)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Volume' } }
+                    }
+                }
+            });
+            
+            // Gráfico frequência
+            const increaseCtx = document.getElementById('increase-frequency-chart').getContext('2d');
+            const increaseLabels = [0,1,2,3,4,5,6].map(day => weekdayNames[day]);
+            const increaseData = [0,1,2,3,4,5,6].map(day => analysis.increaseByWeekday[day] || 0);
+            
+            charts.increase = new Chart(increaseCtx, {
+                type: 'bar',
+                data: {
+                    labels: increaseLabels,
+                    datasets: [{
+                        label: 'Aumentos',
+                        data: increaseData,
+                        backgroundColor: 'rgba(247, 37, 133, 0.7)',
+                        borderColor: 'rgb(247, 37, 133)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Número' } }
+                    }
+                }
+            });
+        }
+        
+        function generateTrendSummary(analysis) {
+            const weekdayNames = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+            const summaryElement = document.getElementById('trend-summary');
+            const recommendationsElement = document.getElementById('recommendations');
+            
+            let summaryHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; font-size: 0.9rem;">
+                    <div>
+                        <p><strong>Volume Total:</strong> ${analysis.totalVolume.toLocaleString('pt-BR')}</p>
+                        <p><strong>Média Diária:</strong> ${analysis.averageDaily.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}</p>
+                        <p><strong>Melhor Dia:</strong> ${analysis.maxWeekday.day !== null ? weekdayNames[analysis.maxWeekday.day] : '-'}</p>
+                    </div>
+                    <div>
+                        <p><strong>Melhor Mês:</strong> ${analysis.maxMonth.month || '-'}</p>
+            `;
+            
+            if (analysis.maxIncreaseWeekday.day !== null) {
+                summaryHTML += `<p><strong>Dia com Mais Aumentos:</strong> ${weekdayNames[analysis.maxIncreaseWeekday.day]}</p>`;
+            }
+            
+            const volumes = analysis.rawData.map(item => item.volume);
+            let increases = 0;
+            for (let i = 1; i < volumes.length; i++) {
+                if (volumes[i] > volumes[i-1]) increases++;
+            }
+            const increasePercentage = volumes.length > 1 ? (increases / (volumes.length - 1) * 100).toFixed(1) : 0;
+            
+            summaryHTML += `
+                        <p><strong>Tendência:</strong> ${increasePercentage > 50 ? 'Crescente' : 'Estável'} (${increasePercentage}%)</p>
+                    </div>
+                </div>
+            `;
+            
+            summaryElement.innerHTML = summaryHTML;
+            
+            let recommendationsHTML = '';
+            if (analysis.maxWeekday.day !== null) {
+                recommendationsHTML += `<p><i class="fas fa-check-circle"></i> Focar recursos nas ${weekdayNames[analysis.maxWeekday.day].toLowerCase()}s</p>`;
+            }
+            if (increasePercentage > 60) {
+                recommendationsHTML += `<p><i class="fas fa-check-circle"></i> Considerar expansão de capacidade</p>`;
+            } else if (increasePercentage < 40) {
+                recommendationsHTML += `<p><i class="fas fa-exclamation-triangle"></i> Analisar tendência decrescente</p>`;
+            }
+            
+            recommendationsElement.innerHTML = recommendationsHTML || '<p>Analise os gráficos para mais insights</p>';
+        }
+        
+        function populateDataTable(data) {
+            const tableBody = document.getElementById('data-table-body');
+            tableBody.innerHTML = '';
+            
+            const sortedData = [...data].sort((a, b) => b.date - a.date).slice(0, 30);
+            
+            sortedData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                
+                let variation = '-';
+                if (index < data.length - 1) {
+                    const prevItem = data.find(d => d.date < item.date);
+                    if (prevItem) {
+                        const change = ((item.volume - prevItem.volume) / prevItem.volume * 100);
+                        variation = `${change > 0 ? '+' : ''}${change.toFixed(1)}%`;
+                    }
+                }
+                
+                row.innerHTML = `
+                    <td>${moment(item.date).format('DD/MM/YYYY')}</td>
+                    <td>${item.volume.toLocaleString('pt-BR')}</td>
+                    <td>${item.weekday}</td>
+                    <td>${item.monthYear}</td>
+                    <td>${variation}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+            
+            if (data.length > 30) {
+                const infoRow = document.createElement('tr');
+                infoRow.innerHTML = `
+                    <td colspan="5" style="text-align: center; background-color: #f8f9fa; font-style: italic;">
+                        Mostrando 30 registros de ${data.length} no total
+                    </td>
+                `;
+                tableBody.appendChild(infoRow);
+            }
+        }
+        
+        function exportReport() {
+            const exportData = {
+                dashboard: {
+                    totalVolume: document.getElementById('total-expedido').textContent,
+                    averageDaily: document.getElementById('media-diaria').textContent,
+                    maxWeekday: document.getElementById('dia-maior-volume').textContent,
+                    maxMonth: document.getElementById('mes-maior-volume').textContent
+                },
+                rawData: filteredData.map(item => ({
+                    data: moment(item.date).format('DD/MM/YYYY'),
+                    volume: item.volume,
+                    diaSemana: item.weekday,
+                    mesAno: item.monthYear
+                }))
+            };
+            
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `relatorio-volume-${moment().format('DD-MM-YYYY')}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('Relatório exportado!');
+        }
+        
+        function showError(message) {
+            errorTextElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+        
+        function hideError() {
+            errorElement.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
