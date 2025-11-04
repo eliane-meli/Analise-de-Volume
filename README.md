@@ -487,7 +487,7 @@
     </div>
     
     <footer>
-        <p>Dashboard de Análise de Volume. Desenvolvido por Eliane ERB. &copy; 2023 - Funciona 100% offline</p>
+        <p>Dashboard de Análise de Volume. Desenvolvido por Eliane ERB. &copy; 2025 - Funciona 100% offline</p>
     </footer>
 
     <script>
