@@ -354,7 +354,7 @@
             <p class="description">
                 <span id="connection-status" class="status-indicator status-connected"></span>
                 Dashboard interativo - Funciona 100% offline
-             <p><a href="https://docs.google.com/spreadsheets/d/1iLftWtEUacg6iYCzZKhChR6b5nqrNQxTz6R3lulBCro/edit?gid=1457446284#gid=1457446284"> Faça download da planilha aqui 📄</a><p;color:white >
+             <a ;color:white; href="https://docs.google.com/spreadsheets/d/1iLftWtEUacg6iYCzZKhChR6b5nqrNQxTz6R3lulBCro/edit?gid=1457446284#gid=1457446284"> Faça download da planilha aqui 📄</a>
                 <div class="connection-info" id="connection-info">Pronto para análise</div>
             </p>
         </header>
