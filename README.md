@@ -325,6 +325,32 @@
 
         .variation-neutral {
             color: var(--text-light);
+            font-weight: bold;
+        }
+
+        .variation-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .variation-badge.positive {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--positive);
+        }
+
+        .variation-badge.negative {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--negative);
+        }
+
+        .variation-badge.neutral {
+            background-color: rgba(108, 117, 125, 0.1);
+            color: var(--text-light);
         }
 
         @media (max-width: 768px) {
@@ -354,7 +380,6 @@
             <p class="description">
                 <span id="connection-status" class="status-indicator status-connected"></span>
                 Dashboard interativo - Funciona 100% offline
-             <a href="https://docs.google.com/spreadsheets/d/1iLftWtEUacg6iYCzZKhChR6b5nqrNQxTz6R3lulBCro/edit?gid=1457446284#gid=1457446284"> Faça download da planilha aqui 📄</a>
                 <div class="connection-info" id="connection-info">Pronto para análise</div>
             </p>
         </header>
@@ -394,6 +419,7 @@
         <i class="fas fa-download"></i> Faça download Aqui
     </a>
 </div>
+
             <button id="export-btn" class="btn">
                 <i class="fas fa-download"></i> Exportar Relatório
             </button>
@@ -433,13 +459,6 @@
                 </div>
                 
                 <div class="card">
-                    <h2><i class="fas fa-percentage"></i> Variação Percentual Diária</h2>
-                    <div class="chart-container">
-                        <canvas id="variation-chart"></canvas>
-                    </div>
-                </div>
-                
-                <div class="card">
                     <h2><i class="fas fa-calendar-week"></i> Volume por Dia da Semana</h2>
                     <div class="chart-container">
                         <canvas id="weekday-volume-chart"></canvas>
@@ -458,6 +477,14 @@
                     <div class="chart-container">
                         <canvas id="increase-frequency-chart"></canvas>
                     </div>
+                </div>
+            </div>
+
+            <!-- NOVO CARD: GRÁFICO DE VARIAÇÃO DIÁRIA -->
+            <div class="card">
+                <h2><i class="fas fa-exchange-alt"></i> Variação Diária de Volume</h2>
+                <div class="chart-container">
+                    <canvas id="daily-variation-chart"></canvas>
                 </div>
             </div>
             
@@ -481,7 +508,8 @@
                                 <th>Volume Expedido</th>
                                 <th>Dia da Semana</th>
                                 <th>Mês</th>
-                                <th>Variação</th>
+                                <th>Variação %</th>
+                                <th>Variação Volume</th>
                             </tr>
                         </thead>
                         <tbody id="data-table-body">
@@ -493,7 +521,7 @@
     </div>
     
     <footer>
-        <p>Dashboard de Análise de Volume. Desenvolvido por Eliane ERB. &copy; 2025 - Funciona 100% offline</p>
+        <p>Dashboard de Análise de Volume. Desenvolvido por Eliane ERB &copy; 2025 - Funciona 100% offline</p>
     </footer>
 
     <script>
@@ -516,13 +544,10 @@
         
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
-            // Configurar moment.js para português
             moment.locale('pt-br');
-            
-            // Carregar dados iniciais
             loadData();
             
-            // Configurar eventos
+            // Eventos
             refreshButton.addEventListener('click', loadData);
             exportButton.addEventListener('click', exportReport);
             uploadButton.addEventListener('click', () => fileInput.click());
@@ -531,26 +556,21 @@
             yearFilter.addEventListener('change', applyFilters);
         });
         
-        // Função para carregar dados
         function loadData() {
             hideError();
             updateConnectionStatus(true, 'Carregando dados de exemplo...');
             
             try {
-                // Gerar dados de exemplo realistas
                 allData = generateRealisticSampleData();
                 populateYearFilter();
                 applyFilters();
-                
                 updateConnectionStatus(true, 'Dados carregados com sucesso');
-                
             } catch (error) {
                 console.error('Erro ao carregar dados:', error);
                 showError('Erro ao carregar dados: ' + error.message);
             }
         }
         
-        // Função para gerar dados de exemplo realistas
         function generateRealisticSampleData() {
             console.log('Gerando dados de exemplo realistas...');
             const data = [];
@@ -561,42 +581,16 @@
             let currentDate = new Date(startDate);
             let previousVolume = 850;
             
-            // Padrões sazonais
-            const seasonalPatterns = {
-                0: 0.7,  // Domingo - menor volume
-                1: 1.2,  // Segunda - maior volume
-                2: 1.1,  // Terça
-                3: 1.0,  // Quarta
-                4: 1.05, // Quinta
-                5: 0.9,  // Sexta
-                6: 0.8   // Sábado
-            };
-            
-            // Variação por mês (sazonalidade)
-            const monthlyPatterns = {
-                0: 0.9,   // Janeiro
-                1: 0.85,  // Fevereiro
-                2: 0.95,  // Março
-                3: 1.0,   // Abril
-                4: 1.1,   // Maio
-                5: 1.15,  // Junho
-                6: 1.05,  // Julho
-                7: 1.2,   // Agosto
-                8: 1.25,  // Setembro
-                9: 1.3,   // Outubro
-                10: 1.35, // Novembro
-                11: 1.4   // Dezembro
-            };
+            const seasonalPatterns = {0: 0.7, 1: 1.2, 2: 1.1, 3: 1.0, 4: 1.05, 5: 0.9, 6: 0.8};
+            const monthlyPatterns = {0: 0.9, 1: 0.85, 2: 0.95, 3: 1.0, 4: 1.1, 5: 1.15, 6: 1.05, 7: 1.2, 8: 1.25, 9: 1.3, 10: 1.35, 11: 1.4};
             
             while (currentDate <= endDate) {
                 const dayOfWeek = currentDate.getDay();
                 const month = currentDate.getMonth();
                 
-                // Variação base + sazonalidade
                 let baseVariation = (Math.random() - 0.3) * 80;
                 let volume = Math.max(200, previousVolume + baseVariation);
                 
-                // Aplicar padrões sazonais
                 volume *= seasonalPatterns[dayOfWeek];
                 volume *= monthlyPatterns[month];
                 
@@ -620,7 +614,6 @@
             return data;
         }
         
-        // Função para processar dados de arquivo carregado
         function handleFileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -645,7 +638,6 @@
                 } catch (error) {
                     console.error('Erro ao processar arquivo:', error);
                     showError('Erro ao processar arquivo: ' + error.message);
-                    // Recarregar dados de exemplo em caso de erro
                     loadData();
                 }
             };
@@ -663,7 +655,6 @@
             }
         }
         
-        // Função para processar dados de arquivo CSV
         function processFileData(content, fileName) {
             const weekdays = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
             const processedData = [];
@@ -672,9 +663,7 @@
                 const lines = content.split('\n').filter(line => line.trim() !== '');
                 const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
                 
-                // Encontrar índices das colunas necessárias
-                const dateIndex = headers.findIndex(h => 
-                    h.toLowerCase().includes('data'));
+                const dateIndex = headers.findIndex(h => h.toLowerCase().includes('data'));
                 const volumeIndex = headers.findIndex(h => 
                     h.toLowerCase().includes('qntd') || h.toLowerCase().includes('volume') || 
                     h.toLowerCase().includes('expedida') || h.toLowerCase().includes('quantidade'));
@@ -683,24 +672,19 @@
                     throw new Error('Colunas "Data" e "Volume/QNTD Expedida" são obrigatórias no CSV');
                 }
                 
-                // Processar cada linha
                 for (let i = 1; i < lines.length; i++) {
                     const line = lines[i].trim();
                     if (!line) continue;
                     
-                    // Lidar com CSV que pode ter vírgulas dentro de aspas
                     const values = parseCSVLine(line);
-                    
-                    // Tentar parsear a data
                     let date;
+                    
                     try {
                         const dateStr = values[dateIndex].replace(/"/g, '').trim();
                         
-                        // Tentar diferentes formatos de data
                         if (dateStr.includes('/')) {
                             const parts = dateStr.split('/');
                             if (parts.length === 3) {
-                                // Formato DD/MM/AAAA ou MM/DD/AAAA
                                 if (parts[2].length === 4) {
                                     date = new Date(parts[2], parts[1] - 1, parts[0]);
                                 } else if (parts[0].length === 4) {
@@ -711,22 +695,16 @@
                             date = new Date(dateStr);
                         }
                     } catch (e) {
-                        console.warn('Erro ao parsear data:', values[dateIndex], e);
                         continue;
                     }
                     
-                    if (!date || isNaN(date.getTime())) {
-                        console.warn('Data inválida:', values[dateIndex]);
-                        continue;
-                    }
+                    if (!date || isNaN(date.getTime())) continue;
                     
                     const volume = parseFloat(values[volumeIndex].replace(/"/g, '')) || 0;
-                    
                     if (volume <= 0) continue;
                     
                     const month = date.getMonth() + 1;
                     const year = date.getFullYear();
-                    const monthYear = `${month.toString().padStart(2, '0')}/${year}`;
                     const dayOfWeek = date.getDay();
                     
                     processedData.push({
@@ -737,16 +715,14 @@
                         dayOfWeek: dayOfWeek,
                         month: month,
                         year: year,
-                        monthYear: monthYear
+                        monthYear: `${month.toString().padStart(2, '0')}/${year}`
                     });
                 }
             }
             
-            console.log('Dados processados do arquivo:', processedData.length, 'registros');
             return processedData;
         }
         
-        // Função auxiliar para parsear linha CSV
         function parseCSVLine(line) {
             const result = [];
             let current = '';
@@ -769,7 +745,6 @@
             return result;
         }
         
-        // Função para atualizar status da conexão
         function updateConnectionStatus(connected, message) {
             if (connected) {
                 connectionStatus.className = 'status-indicator status-connected';
@@ -779,7 +754,6 @@
             connectionInfo.textContent = message;
         }
         
-        // Função para popular o filtro de anos
         function populateYearFilter() {
             const years = [...new Set(allData.map(item => item.year))].sort();
             yearFilter.innerHTML = '<option value="">Todos os anos</option>';
@@ -792,34 +766,25 @@
             });
         }
         
-        // Função para aplicar filtros
         function applyFilters() {
             const selectedMonth = monthFilter.value;
             const selectedYear = yearFilter.value;
             
             filteredData = allData.filter(item => {
                 let match = true;
-                
-                if (selectedMonth) {
-                    match = match && item.month.toString() === selectedMonth;
-                }
-                
-                if (selectedYear) {
-                    match = match && item.year.toString() === selectedYear;
-                }
-                
+                if (selectedMonth) match = match && item.month.toString() === selectedMonth;
+                if (selectedYear) match = match && item.year.toString() === selectedYear;
                 return match;
             });
             
             if (filteredData.length === 0) {
-                showError('Nenhum dado encontrado com os filtros selecionados.');
+                showError('Nenhum dado com esses filtros');
             } else {
                 hideError();
                 updateDashboard();
             }
         }
         
-        // Função para atualizar o dashboard
         function updateDashboard() {
             const analysis = analyzeData(filteredData);
             displayStats(analysis);
@@ -828,14 +793,12 @@
             populateDataTable(filteredData);
         }
         
-        // Função para analisar os dados
         function analyzeData(data) {
             if (data.length === 0) return {};
             
             const totalVolume = data.reduce((sum, item) => sum + item.volume, 0);
             const averageDaily = totalVolume / data.length;
             
-            // Agrupar por dia da semana
             const weekdayStats = {};
             data.forEach(item => {
                 if (!weekdayStats[item.dayOfWeek]) {
@@ -845,13 +808,11 @@
                 weekdayStats[item.dayOfWeek].count++;
             });
             
-            // Calcular médias por dia da semana
             const weekdayAverages = {};
             Object.keys(weekdayStats).forEach(weekday => {
                 weekdayAverages[weekday] = weekdayStats[weekday].total / weekdayStats[weekday].count;
             });
             
-            // Agrupar por mês
             const monthlyStats = {};
             data.forEach(item => {
                 if (!monthlyStats[item.monthYear]) {
@@ -861,13 +822,11 @@
                 monthlyStats[item.monthYear].count++;
             });
             
-            // Calcular médias por mês
             const monthlyAverages = {};
             Object.keys(monthlyStats).forEach(month => {
                 monthlyAverages[month] = monthlyStats[month].total / monthlyStats[month].count;
             });
             
-            // Encontrar dia com maior volume
             let maxWeekdayVolume = 0;
             let maxWeekday = null;
             Object.keys(weekdayAverages).forEach(weekday => {
@@ -877,7 +836,6 @@
                 }
             });
             
-            // Encontrar mês com maior volume
             let maxMonthlyVolume = 0;
             let maxMonth = null;
             Object.keys(monthlyAverages).forEach(month => {
@@ -887,26 +845,20 @@
                 }
             });
             
-            // Análise de aumentos
             const increaseByWeekday = {};
             let previousVolume = null;
-            
-            // Ordenar dados por data
             const sortedData = [...data].sort((a, b) => a.date - b.date);
             
             sortedData.forEach((item, index) => {
-                if (index > 0 && previousVolume !== null) {
-                    if (item.volume > previousVolume) {
-                        if (!increaseByWeekday[item.dayOfWeek]) {
-                            increaseByWeekday[item.dayOfWeek] = 0;
-                        }
-                        increaseByWeekday[item.dayOfWeek]++;
+                if (index > 0 && previousVolume !== null && item.volume > previousVolume) {
+                    if (!increaseByWeekday[item.dayOfWeek]) {
+                        increaseByWeekday[item.dayOfWeek] = 0;
                     }
+                    increaseByWeekday[item.dayOfWeek]++;
                 }
                 previousVolume = item.volume;
             });
             
-            // Encontrar dia com maior frequência de aumento
             let maxIncreaseFrequency = 0;
             let maxIncreaseWeekday = null;
             Object.keys(increaseByWeekday).forEach(weekday => {
@@ -915,62 +867,61 @@
                     maxIncreaseWeekday = parseInt(weekday);
                 }
             });
+
+            // Calcular variações diárias
+            const dailyVariations = [];
+            for (let i = 1; i < sortedData.length; i++) {
+                const current = sortedData[i];
+                const previous = sortedData[i-1];
+                const variation = current.volume - previous.volume;
+                const variationPercent = ((variation / previous.volume) * 100);
+                
+                dailyVariations.push({
+                    date: current.date,
+                    volume: current.volume,
+                    variation: variation,
+                    variationPercent: variationPercent,
+                    isPositive: variation > 0
+                });
+            }
             
             return {
                 totalVolume,
                 averageDaily,
-                maxWeekday: {
-                    day: maxWeekday,
-                    volume: maxWeekdayVolume
-                },
-                maxMonth: {
-                    month: maxMonth,
-                    volume: maxMonthlyVolume
-                },
+                maxWeekday: { day: maxWeekday, volume: maxWeekdayVolume },
+                maxMonth: { month: maxMonth, volume: maxMonthlyVolume },
                 weekdayAverages,
                 monthlyAverages,
                 increaseByWeekday,
-                maxIncreaseWeekday: {
-                    day: maxIncreaseWeekday,
-                    frequency: maxIncreaseFrequency
-                },
-                rawData: sortedData
+                maxIncreaseWeekday: { day: maxIncreaseWeekday, frequency: maxIncreaseFrequency },
+                rawData: sortedData,
+                dailyVariations: dailyVariations
             };
         }
         
-        // Função para exibir estatísticas
         function displayStats(analysis) {
             document.getElementById('total-expedido').textContent = analysis.totalVolume.toLocaleString('pt-BR');
             document.getElementById('media-diaria').textContent = analysis.averageDaily.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
             
             const weekdayNames = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
             document.getElementById('dia-maior-volume').textContent = 
-                analysis.maxWeekday.day !== null ? 
-                weekdayNames[analysis.maxWeekday.day] : '-';
-                
-            document.getElementById('mes-maior-volume').textContent = 
-                analysis.maxMonth.month !== null ? 
-                analysis.maxMonth.month : '-';
+                analysis.maxWeekday.day !== null ? weekdayNames[analysis.maxWeekday.day] : '-';
+            document.getElementById('mes-maior-volume').textContent = analysis.maxMonth.month || '-';
         }
         
-        // Função para criar gráficos
         function createCharts(analysis) {
             const weekdayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
             
-            // Destruir gráficos existentes
             Object.values(charts).forEach(chart => {
                 if (chart) chart.destroy();
             });
             
-            // Gráfico de tendência de volume por data
+            // Gráfico de tendência
             const trendCtx = document.getElementById('volume-trend-chart').getContext('2d');
-            
-            // Simplificar labels para não sobrecarregar o gráfico
             const dates = analysis.rawData.map(item => moment(item.date).format('DD/MM'));
             const volumes = analysis.rawData.map(item => item.volume);
             
-            // Mostrar apenas alguns labels para não ficar poluído
-            const step = Math.max(1, Math.floor(dates.length / 20));
+            const step = Math.max(1, Math.floor(dates.length / 15));
             const displayDates = dates.filter((_, index) => index % step === 0);
             const displayVolumes = volumes.filter((_, index) => index % step === 0);
             
@@ -979,7 +930,7 @@
                 data: {
                     labels: displayDates,
                     datasets: [{
-                        label: 'Volume Expedido',
+                        label: 'Volume',
                         data: displayVolumes,
                         borderColor: '#4361ee',
                         backgroundColor: 'rgba(67, 97, 238, 0.1)',
@@ -991,88 +942,15 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Tendência de Volume ao Longo do Tempo'
-                        },
-                        legend: {
-                            display: true
-                        }
-                    },
+                    plugins: { legend: { display: true } },
                     scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Data'
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Volume'
-                            },
-                            beginAtZero: true
-                        }
+                        x: { title: { display: true, text: 'Data' } },
+                        y: { beginAtZero: true, title: { display: true, text: 'Volume' } }
                     }
                 }
             });
             
-            // NOVO GRÁFICO: Variação Percentual Diária
-            const variationCtx = document.getElementById('variation-chart').getContext('2d');
-            const variationData = calculateDailyVariation(analysis.rawData);
-            
-            charts.variation = new Chart(variationCtx, {
-                type: 'bar',
-                data: {
-                    labels: variationData.dates,
-                    datasets: [{
-                        label: 'Variação Percentual',
-                        data: variationData.percentages,
-                        backgroundColor: variationData.percentages.map(p => 
-                            p > 0 ? 'rgba(40, 167, 69, 0.7)' : 'rgba(220, 53, 69, 0.7)'
-                        ),
-                        borderColor: variationData.percentages.map(p => 
-                            p > 0 ? 'rgb(40, 167, 69)' : 'rgb(220, 53, 69)'
-                        ),
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Variação Percentual Diária (Verde: Aumento, Vermelho: Queda)'
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return `Variação: ${context.raw > 0 ? '+' : ''}${context.raw.toFixed(1)}%`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Data'
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Variação (%)'
-                            },
-                            beginAtZero: false
-                        }
-                    }
-                }
-            });
-            
-            // Gráfico de volume por dia da semana
+            // Gráfico dia da semana
             const weekdayCtx = document.getElementById('weekday-volume-chart').getContext('2d');
             const weekdayLabels = [0,1,2,3,4,5,6].map(day => weekdayNames[day]);
             const weekdayData = [0,1,2,3,4,5,6].map(day => analysis.weekdayAverages[day] || 0);
@@ -1084,49 +962,21 @@
                     datasets: [{
                         label: 'Volume Médio',
                         data: weekdayData,
-                        backgroundColor: [
-                            'rgba(67, 97, 238, 0.7)',
-                            'rgba(76, 201, 240, 0.7)',
-                            'rgba(72, 149, 239, 0.7)',
-                            'rgba(247, 37, 133, 0.7)',
-                            'rgba(102, 16, 242, 0.7)',
-                            'rgba(63, 55, 201, 0.7)',
-                            'rgba(4, 190, 254, 0.7)'
-                        ],
-                        borderColor: [
-                            'rgb(67, 97, 238)',
-                            'rgb(76, 201, 240)',
-                            'rgb(72, 149, 239)',
-                            'rgb(247, 37, 133)',
-                            'rgb(102, 16, 242)',
-                            'rgb(63, 55, 201)',
-                            'rgb(4, 190, 254)'
-                        ],
+                        backgroundColor: 'rgba(67, 97, 238, 0.7)',
+                        borderColor: 'rgb(67, 97, 238)',
                         borderWidth: 1
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Volume Médio por Dia da Semana'
-                        }
-                    },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Volume Médio'
-                            }
-                        }
+                        y: { beginAtZero: true, title: { display: true, text: 'Volume' } }
                     }
                 }
             });
             
-            // Gráfico de volume por mês
+            // Gráfico mensal
             const monthlyCtx = document.getElementById('monthly-volume-chart').getContext('2d');
             const monthlyLabels = Object.keys(analysis.monthlyAverages).sort();
             const monthlyData = monthlyLabels.map(month => analysis.monthlyAverages[month]);
@@ -1146,25 +996,13 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Volume Médio por Mês'
-                        }
-                    },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Volume Médio'
-                            }
-                        }
+                        y: { beginAtZero: true, title: { display: true, text: 'Volume' } }
                     }
                 }
             });
             
-            // Gráfico de frequência de aumento
+            // Gráfico frequência
             const increaseCtx = document.getElementById('increase-frequency-chart').getContext('2d');
             const increaseLabels = [0,1,2,3,4,5,6].map(day => weekdayNames[day]);
             const increaseData = [0,1,2,3,4,5,6].map(day => analysis.increaseByWeekday[day] || 0);
@@ -1174,7 +1012,7 @@
                 data: {
                     labels: increaseLabels,
                     datasets: [{
-                        label: 'Frequência de Aumento',
+                        label: 'Aumentos',
                         data: increaseData,
                         backgroundColor: 'rgba(247, 37, 133, 0.7)',
                         borderColor: 'rgb(247, 37, 133)',
@@ -1184,179 +1022,150 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Número' } }
+                    }
+                }
+            });
+
+            // NOVO GRÁFICO: Variação Diária
+            const variationCtx = document.getElementById('daily-variation-chart').getContext('2d');
+            const variationDates = analysis.dailyVariations.map(item => moment(item.date).format('DD/MM'));
+            const variationData = analysis.dailyVariations.map(item => item.variation);
+            const variationColors = analysis.dailyVariations.map(item => 
+                item.variation > 0 ? '#28a745' : '#dc3545'
+            );
+
+            // Simplificar dados para não sobrecarregar
+            const variationStep = Math.max(1, Math.floor(variationDates.length / 20));
+            const displayVariationDates = variationDates.filter((_, index) => index % variationStep === 0);
+            const displayVariationData = variationData.filter((_, index) => index % variationStep === 0);
+            const displayVariationColors = variationColors.filter((_, index) => index % variationStep === 0);
+
+            charts.variation = new Chart(variationCtx, {
+                type: 'bar',
+                data: {
+                    labels: displayVariationDates,
+                    datasets: [{
+                        label: 'Variação Diária',
+                        data: displayVariationData,
+                        backgroundColor: displayVariationColors,
+                        borderColor: displayVariationColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
-                        title: {
-                            display: true,
-                            text: 'Frequência de Aumento por Dia da Semana'
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    const percent = analysis.dailyVariations[context.dataIndex * variationStep]?.variationPercent.toFixed(1) || '0';
+                                    return `Variação: ${value > 0 ? '+' : ''}${value.toLocaleString('pt-BR')} (${value > 0 ? '+' : ''}${percent}%)`;
+                                }
+                            }
                         }
                     },
                     scales: {
-                        y: {
-                            beginAtZero: true,
+                        x: {
                             title: {
                                 display: true,
-                                text: 'Número de Aumentos'
+                                text: 'Data'
                             }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Variação do Volume'
+                            },
+                            beginAtZero: false
                         }
                     }
                 }
             });
         }
         
-        // Função para calcular variação percentual diária
-        function calculateDailyVariation(data) {
-            const variations = {
-                dates: [],
-                percentages: []
-            };
-            
-            for (let i = 1; i < data.length; i++) {
-                const current = data[i];
-                const previous = data[i-1];
-                
-                const variation = ((current.volume - previous.volume) / previous.volume) * 100;
-                
-                variations.dates.push(moment(current.date).format('DD/MM'));
-                variations.percentages.push(parseFloat(variation.toFixed(1)));
-            }
-            
-            // Simplificar para não sobrecarregar o gráfico
-            const step = Math.max(1, Math.floor(variations.dates.length / 15));
-            return {
-                dates: variations.dates.filter((_, index) => index % step === 0),
-                percentages: variations.percentages.filter((_, index) => index % step === 0)
-            };
-        }
-        
-        // Função para gerar resumo das tendências
         function generateTrendSummary(analysis) {
             const weekdayNames = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
             const summaryElement = document.getElementById('trend-summary');
             const recommendationsElement = document.getElementById('recommendations');
             
-            // Calcular estatísticas de variação
-            const variationStats = calculateVariationStats(analysis.rawData);
-            
+            // Análise de variações
+            const positiveVariations = analysis.dailyVariations.filter(v => v.variation > 0).length;
+            const negativeVariations = analysis.dailyVariations.filter(v => v.variation < 0).length;
+            const totalVariations = analysis.dailyVariations.length;
+            const positivePercentage = totalVariations > 0 ? ((positiveVariations / totalVariations) * 100).toFixed(1) : 0;
+
+            // Maior aumento e queda
+            const maxIncrease = analysis.dailyVariations.reduce((max, v) => v.variation > max.variation ? v : max, {variation: -Infinity});
+            const maxDecrease = analysis.dailyVariations.reduce((min, v) => v.variation < min.variation ? v : min, {variation: Infinity});
+
             let summaryHTML = `
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
                     <div>
-                        <p><strong>Volume Total Expedido:</strong> ${analysis.totalVolume.toLocaleString('pt-BR')}</p>
+                        <p><strong>Volume Total:</strong> ${analysis.totalVolume.toLocaleString('pt-BR')}</p>
                         <p><strong>Média Diária:</strong> ${analysis.averageDaily.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}</p>
-                        <p><strong>Dia com Maior Volume:</strong> ${analysis.maxWeekday.day !== null ? weekdayNames[analysis.maxWeekday.day] : '-'} (${analysis.maxWeekday.volume.toLocaleString('pt-BR', { maximumFractionDigits: 0 })})</p>
+                        <p><strong>Melhor Dia:</strong> ${analysis.maxWeekday.day !== null ? weekdayNames[analysis.maxWeekday.day] : '-'}</p>
                     </div>
                     <div>
-                        <p><strong>Mês com Maior Volume:</strong> ${analysis.maxMonth.month || '-'} (${analysis.maxMonth.volume.toLocaleString('pt-BR', { maximumFractionDigits: 0 })})</p>
-                        <p><strong>Maior Aumento:</strong> <span class="variation-positive">+${variationStats.maxIncrease.toFixed(1)}%</span></p>
-                        <p><strong>Maior Queda:</strong> <span class="variation-negative">${variationStats.maxDecrease.toFixed(1)}%</span></p>
-            `;
-            
-            if (analysis.maxIncreaseWeekday.day !== null) {
-                summaryHTML += `<p><strong>Dia com Maior Frequência de Aumento:</strong> ${weekdayNames[analysis.maxIncreaseWeekday.day]} (${analysis.maxIncreaseWeekday.frequency} aumentos)</p>`;
-            }
-            
-            // Análise de tendência geral
-            const volumes = analysis.rawData.map(item => item.volume);
-            let increases = 0;
-            let decreases = 0;
-            
-            for (let i = 1; i < volumes.length; i++) {
-                if (volumes[i] > volumes[i-1]) increases++;
-                else if (volumes[i] < volumes[i-1]) decreases++;
-            }
-            
-            const totalChanges = increases + decreases;
-            const increasePercentage = totalChanges > 0 ? (increases / totalChanges * 100).toFixed(1) : 0;
-            
-            summaryHTML += `
-                        <p><strong>Tendência Geral:</strong> ${increasePercentage > 50 ? 'Crescente' : 'Decrescente'} (${increasePercentage}% de dias com aumento)</p>
+                        <p><strong>Melhor Mês:</strong> ${analysis.maxMonth.month || '-'}</p>
+                        <p><strong>Dias com Aumento:</strong> ${positivePercentage}% (${positiveVariations} de ${totalVariations})</p>
+                        <p><strong>Maior Aumento:</strong> <span class="variation-positive">+${maxIncrease.variation?.toLocaleString('pt-BR') || 0}</span></p>
+                        <p><strong>Maior Queda:</strong> <span class="variation-negative">${maxDecrease.variation?.toLocaleString('pt-BR') || 0}</span></p>
                     </div>
                 </div>
             `;
             
             summaryElement.innerHTML = summaryHTML;
             
-            // Gerar recomendações
             let recommendationsHTML = '';
-            
             if (analysis.maxWeekday.day !== null) {
-                recommendationsHTML += `<p><i class="fas fa-check-circle"></i> <strong>Alocar mais recursos nas ${weekdayNames[analysis.maxWeekday.day].toLowerCase()}s</strong> para aproveitar os picos de volume.</p>`;
+                recommendationsHTML += `<p><i class="fas fa-check-circle"></i> Focar recursos nas ${weekdayNames[analysis.maxWeekday.day].toLowerCase()}s</p>`;
             }
             
-            if (analysis.maxIncreaseWeekday.day !== null) {
-                recommendationsHTML += `<p><i class="fas fa-check-circle"></i> <strong>Antecipar preparativos nas ${weekdayNames[analysis.maxIncreaseWeekday.day].toLowerCase()}s</strong> para lidar com os aumentos frequentes de volume.</p>`;
+            if (positivePercentage > 60) {
+                recommendationsHTML += `<p><i class="fas fa-check-circle"></i> Tendência positiva forte - considerar expansão</p>`;
+            } else if (positivePercentage < 40) {
+                recommendationsHTML += `<p><i class="fas fa-exclamation-triangle"></i> Muitas quedas - analisar causas</p>`;
+            }
+
+            if (maxIncrease.variation > 500) {
+                recommendationsHTML += `<p><i class="fas fa-chart-line"></i> Picos significativos detectados - otimizar para esses períodos</p>`;
             }
             
-            if (increasePercentage > 60) {
-                recommendationsHTML += `<p><i class="fas fa-check-circle"></i> <strong>Considerar expansão de capacidade</strong> devido à tendência consistentemente crescente.</p>`;
-            } else if (increasePercentage < 40) {
-                recommendationsHTML += `<p><i class="fas fa-exclamation-triangle"></i> <strong>Analisar causas da tendência decrescente</strong> e considerar estratégias para reverter esta situação.</p>`;
-            }
-            
-            // Recomendações baseadas na variação
-            if (variationStats.avgVariation > 5) {
-                recommendationsHTML += `<p><i class="fas fa-chart-line"></i> <strong>Variação positiva consistente</strong> - manter estratégias atuais.</p>`;
-            } else if (variationStats.avgVariation < -2) {
-                recommendationsHTML += `<p><i class="fas fa-exclamation-triangle"></i> <strong>Variação negativa preocupante</strong> - revisar operações.</p>`;
-            }
-            
-            recommendationsElement.innerHTML = recommendationsHTML;
+            recommendationsElement.innerHTML = recommendationsHTML || '<p>Analise os gráficos para mais insights</p>';
         }
         
-        // Função para calcular estatísticas de variação
-        function calculateVariationStats(data) {
-            let maxIncrease = -Infinity;
-            let maxDecrease = Infinity;
-            let totalVariation = 0;
-            let variationCount = 0;
-            
-            for (let i = 1; i < data.length; i++) {
-                const current = data[i];
-                const previous = data[i-1];
-                
-                const variation = ((current.volume - previous.volume) / previous.volume) * 100;
-                
-                if (variation > maxIncrease) maxIncrease = variation;
-                if (variation < maxDecrease) maxDecrease = variation;
-                
-                totalVariation += variation;
-                variationCount++;
-            }
-            
-            return {
-                maxIncrease: maxIncrease !== -Infinity ? maxIncrease : 0,
-                maxDecrease: maxDecrease !== Infinity ? maxDecrease : 0,
-                avgVariation: variationCount > 0 ? totalVariation / variationCount : 0
-            };
-        }
-        
-        // Função para popular a tabela de dados
         function populateDataTable(data) {
             const tableBody = document.getElementById('data-table-body');
             tableBody.innerHTML = '';
             
-            // Ordenar por data
-            const sortedData = [...data].sort((a, b) => b.date - a.date);
+            const sortedData = [...data].sort((a, b) => b.date - a.date).slice(0, 30);
             
-            // Mostrar apenas os 50 registros mais recentes
-            const displayData = sortedData.slice(0, 50);
-            
-            displayData.forEach((item, index) => {
+            sortedData.forEach((item, index) => {
                 const row = document.createElement('tr');
                 
-                // Encontrar variação em relação ao dia anterior
-                let variation = '-';
+                let variationPercent = '-';
+                let variationVolume = '-';
                 let variationClass = 'variation-neutral';
+                let variationBadgeClass = 'neutral';
                 
                 if (index < sortedData.length - 1) {
                     const prevItem = sortedData[index + 1];
-                    const change = ((item.volume - prevItem.volume) / prevItem.volume * 100);
-                    variation = `${change > 0 ? '+' : ''}${change.toFixed(1)}%`;
+                    const variation = item.volume - prevItem.volume;
+                    const changePercent = ((variation / prevItem.volume) * 100);
                     
-                    // Definir classe baseada na variação
-                    if (change > 0) {
+                    variationPercent = `${changePercent > 0 ? '+' : ''}${changePercent.toFixed(1)}%`;
+                    variationVolume = `${variation > 0 ? '+' : ''}${variation.toLocaleString('pt-BR')}`;
+                    
+                    if (changePercent > 0) {
                         variationClass = 'variation-positive';
-                    } else if (change < 0) {
+                        variationBadgeClass = 'positive';
+                    } else if (changePercent < 0) {
                         variationClass = 'variation-negative';
+                        variationBadgeClass = 'negative';
                     }
                 }
                 
@@ -1365,18 +1174,23 @@
                     <td>${item.volume.toLocaleString('pt-BR')}</td>
                     <td>${item.weekday}</td>
                     <td>${item.monthYear}</td>
-                    <td class="${variationClass}">${variation}</td>
+                    <td>
+                        <span class="variation-badge ${variationBadgeClass}">
+                            <i class="fas ${variationBadgeClass === 'positive' ? 'fa-arrow-up' : variationBadgeClass === 'negative' ? 'fa-arrow-down' : 'fa-minus'}"></i>
+                            ${variationPercent}
+                        </span>
+                    </td>
+                    <td class="${variationClass}">${variationVolume}</td>
                 `;
                 
                 tableBody.appendChild(row);
             });
             
-            // Adicionar mensagem se houver mais dados
-            if (sortedData.length > 50) {
+            if (data.length > 30) {
                 const infoRow = document.createElement('tr');
                 infoRow.innerHTML = `
-                    <td colspan="5" style="text-align: center; background-color: #f8f9fa; font-style: italic;">
-                        Mostrando os 50 registros mais recentes de ${sortedData.length} no total
+                    <td colspan="6" style="text-align: center; background-color: #f8f9fa; font-style: italic;">
+                        Mostrando 30 registros de ${data.length} no total
                     </td>
                 `;
                 tableBody.appendChild(infoRow);
@@ -1384,7 +1198,6 @@
         }
         
         function exportReport() {
-            // Criar um objeto com os dados para exportação
             const exportData = {
                 dashboard: {
                     totalVolume: document.getElementById('total-expedido').textContent,
@@ -1400,23 +1213,19 @@
                 }))
             };
             
-            // Criar um blob com os dados
             const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
-            
-            // Criar um link para download
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `relatorio-volume-${moment().format('YYYY-MM-DD')}.json`;
+            a.download = `relatorio-volume-${moment().format('DD-MM-YYYY')}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             
-            alert('Relatório exportado com sucesso!');
+            alert('Relatório exportado!');
         }
         
-        // Funções auxiliares de UI
         function showError(message) {
             errorTextElement.textContent = message;
             errorElement.style.display = 'block';
