@@ -22,6 +22,8 @@
             --text: #333333;
             --text-light: #6c757d;
             --border: #dee2e6;
+            --positive: #28a745;
+            --negative: #dc3545;
         }
 
         * {
@@ -35,26 +37,26 @@
             background-color: var(--background);
             color: var(--text);
             line-height: 1.6;
-            padding: 10px;
         }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
+            padding: 20px;
         }
 
         header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            padding: 20px 0;
+            padding: 25px 0;
             border-radius: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
 
         h1 {
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
@@ -63,7 +65,7 @@
         }
 
         .description {
-            font-size: 1rem;
+            font-size: 1.1rem;
             opacity: 0.9;
             max-width: 800px;
             margin: 0 auto;
@@ -74,19 +76,19 @@
             justify-content: space-between;
             align-items: center;
             background: var(--card-bg);
-            padding: 15px;
+            padding: 15px 20px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 15px;
         }
 
         .btn {
             background: var(--primary);
             color: white;
             border: none;
-            padding: 10px 15px;
+            padding: 10px 20px;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 600;
@@ -94,7 +96,6 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.9rem;
         }
 
         .btn:hover {
@@ -103,14 +104,17 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
+        .btn i {
+            font-size: 1rem;
+        }
+
         .date-filter {
             display: flex;
             gap: 10px;
             align-items: center;
-            flex-wrap: wrap;
         }
 
-        .date-filter select {
+        .date-filter select, .date-filter input {
             padding: 8px 12px;
             border-radius: 6px;
             border: 1px solid var(--border);
@@ -119,15 +123,15 @@
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
         }
 
         .stat-card {
             background: var(--card-bg);
             border-radius: 10px;
-            padding: 20px 15px;
+            padding: 25px 20px;
             text-align: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -135,78 +139,100 @@
         }
 
         .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
         }
 
         .stat-card h3 {
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: var(--text-light);
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         .stat-value {
-            font-size: 1.8rem;
+            font-size: 2.2rem;
             font-weight: bold;
             color: var(--primary);
+            margin-bottom: 5px;
         }
 
         .dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
         }
 
         .card {
             background: var(--card-bg);
-            border-radius: 10px;
-            padding: 20px;
+            border-radius: 12px;
+            padding: 25px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
         }
 
         .card h2 {
             color: var(--secondary);
-            margin-bottom: 15px;
-            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
             display: flex;
             align-items: center;
             gap: 10px;
-            padding-bottom: 10px;
+            padding-bottom: 12px;
             border-bottom: 2px solid var(--border);
+        }
+
+        .card h2 i {
+            color: var(--primary);
         }
 
         .chart-container {
             height: 300px;
-            margin-top: 10px;
+            margin-top: 15px;
             position: relative;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+            color: var(--text-light);
+        }
+
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--primary);
         }
 
         .error {
             background-color: #ffeaea;
             color: #dc3545;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
             text-align: center;
             border-left: 4px solid #dc3545;
+        }
+
+        .error i {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
         }
 
         .data-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
-            font-size: 0.9rem;
+            margin-top: 15px;
         }
 
         .data-table th, .data-table td {
-            padding: 10px 12px;
+            padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid var(--border);
         }
@@ -221,41 +247,54 @@
             background-color: rgba(0, 0, 0, 0.02);
         }
 
+        .data-table tr:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
         footer {
             text-align: center;
-            margin-top: 30px;
-            padding: 15px;
+            margin-top: 40px;
+            padding: 20px;
             color: var(--text-light);
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             border-top: 1px solid var(--border);
         }
 
         .insight-card {
             background: linear-gradient(135deg, var(--info), var(--success));
             color: white;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
         }
 
         .insight-card h3 {
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 1.1rem;
+            gap: 10px;
         }
 
         .status-indicator {
             display: inline-block;
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-            margin-right: 6px;
+            margin-right: 8px;
         }
 
         .status-connected {
             background-color: #28a745;
+        }
+
+        .status-disconnected {
+            background-color: #dc3545;
+        }
+
+        .connection-info {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            opacity: 0.8;
         }
 
         .file-input-container {
@@ -274,6 +313,46 @@
             cursor: pointer;
         }
 
+        .variation-positive {
+            color: var(--positive);
+            font-weight: bold;
+        }
+
+        .variation-negative {
+            color: var(--negative);
+            font-weight: bold;
+        }
+
+        .variation-neutral {
+            color: var(--text-light);
+            font-weight: bold;
+        }
+
+        .variation-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .variation-badge.positive {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--positive);
+        }
+
+        .variation-badge.negative {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--negative);
+        }
+
+        .variation-badge.neutral {
+            background-color: rgba(108, 117, 125, 0.1);
+            color: var(--text-light);
+        }
+
         @media (max-width: 768px) {
             .dashboard {
                 grid-template-columns: 1fr;
@@ -289,38 +368,7 @@
             }
             
             h1 {
-                font-size: 1.5rem;
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            }
-            
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 5px;
-            }
-            
-            .card {
-                padding: 15px;
-            }
-            
-            .chart-container {
-                height: 250px;
-            }
-            
-            .data-table {
-                font-size: 0.8rem;
-            }
-            
-            .data-table th, .data-table td {
-                padding: 8px 10px;
+                font-size: 2rem;
             }
         }
     </style>
@@ -331,16 +379,14 @@
             <h1><i class="fas fa-chart-line"></i> Dashboard de Análise de Volume</h1>
             <p class="description">
                 <span id="connection-status" class="status-indicator status-connected"></span>
-                Dashboard interativo para análise de dados de volume
-             <a href="https://docs.google.com/spreadsheets/d/1iLftWtEUacg6iYCzZKhChR6b5nqrNQxTz6R3lulBCro/edit?gid=1457446284#gid=1457446284"> Faça download da planilha aqui 📄</a>
-
+                Dashboard interativo - Funciona 100% offline
                 <div class="connection-info" id="connection-info">Pronto para análise</div>
             </p>
         </header>
         
         <div class="controls">
             <button id="refresh-btn" class="btn">
-                <i class="fas fa-sync-alt"></i> Atualizar
+                <i class="fas fa-sync-alt"></i> Atualizar Dados
             </button>
             <div class="date-filter">
                 <select id="month-filter">
@@ -364,7 +410,7 @@
             </div>
             <div class="file-input-container">
                 <button id="upload-btn" class="btn">
-                    <i class="fas fa-upload"></i> CSV
+                    <i class="fas fa-upload"></i> Carregar CSV
                 </button>
                 <input type="file" id="file-input" accept=".csv">
             </div>
@@ -373,8 +419,9 @@
         <i class="fas fa-download"></i> Faça download Aqui
     </a>
 </div>
+
             <button id="export-btn" class="btn">
-                <i class="fas fa-download"></i> Exportar
+                <i class="fas fa-download"></i> Exportar Relatório
             </button>
         </div>
         
@@ -386,7 +433,7 @@
         <div id="dashboard">
             <div class="stats-grid">
                 <div class="stat-card">
-                    <h3>Volume Total</h3>
+                    <h3>Volume Total Expedido</h3>
                     <div class="stat-value" id="total-expedido">0</div>
                 </div>
                 <div class="stat-card">
@@ -394,25 +441,25 @@
                     <div class="stat-value" id="media-diaria">0</div>
                 </div>
                 <div class="stat-card">
-                    <h3>Melhor Dia</h3>
+                    <h3>Dia com Maior Volume</h3>
                     <div class="stat-value" id="dia-maior-volume">-</div>
                 </div>
                 <div class="stat-card">
-                    <h3>Melhor Mês</h3>
+                    <h3>Mês com Maior Volume</h3>
                     <div class="stat-value" id="mes-maior-volume">-</div>
                 </div>
             </div>
             
             <div class="dashboard">
                 <div class="card">
-                    <h2><i class="fas fa-chart-line"></i> Tendência por Data</h2>
+                    <h2><i class="fas fa-chart-line"></i> Tendência de Volume por Data</h2>
                     <div class="chart-container">
                         <canvas id="volume-trend-chart"></canvas>
                     </div>
                 </div>
                 
                 <div class="card">
-                    <h2><i class="fas fa-calendar-week"></i> Volume por Dia</h2>
+                    <h2><i class="fas fa-calendar-week"></i> Volume por Dia da Semana</h2>
                     <div class="chart-container">
                         <canvas id="weekday-volume-chart"></canvas>
                     </div>
@@ -426,19 +473,27 @@
                 </div>
                 
                 <div class="card">
-                    <h2><i class="fas fa-chart-bar"></i> Frequência de Aumento</h2>
+                    <h2><i class="fas fa-chart-bar"></i> Análise de Frequência de Aumento</h2>
                     <div class="chart-container">
                         <canvas id="increase-frequency-chart"></canvas>
                     </div>
                 </div>
             </div>
+
+            <!-- NOVO CARD: GRÁFICO DE VARIAÇÃO DIÁRIA -->
+            <div class="card">
+                <h2><i class="fas fa-exchange-alt"></i> Variação Diária de Volume</h2>
+                <div class="chart-container">
+                    <canvas id="daily-variation-chart"></canvas>
+                </div>
+            </div>
             
             <div class="card">
-                <h2><i class="fas fa-lightbulb"></i> Insights</h2>
+                <h2><i class="fas fa-lightbulb"></i> Insights e Tendências</h2>
                 <div id="trend-summary"></div>
                 
                 <div class="insight-card">
-                    <h3><i class="fas fa-chart-line"></i> Recomendações</h3>
+                    <h3><i class="fas fa-chart-line"></i> Recomendações Baseadas nos Dados</h3>
                     <div id="recommendations"></div>
                 </div>
             </div>
@@ -450,10 +505,11 @@
                         <thead>
                             <tr>
                                 <th>Data</th>
-                                <th>Volume</th>
-                                <th>Dia</th>
-                                <th>Mês/Ano</th>
-                                <th>Variação</th>
+                                <th>Volume Expedido</th>
+                                <th>Dia da Semana</th>
+                                <th>Mês</th>
+                                <th>Variação %</th>
+                                <th>Variação Volume</th>
                             </tr>
                         </thead>
                         <tbody id="data-table-body">
@@ -465,7 +521,7 @@
     </div>
     
     <footer>
-        <p>Dashboard de Análise de Volume. Desenvolvido por Eliane ERB &copy; 2025 - <a href="#" style="color: var(--primary);" onclick="showInstructions()">Como usar</a></p>
+        <p>Dashboard de Análise de Volume. Desenvolvido por ERB. &copy; 2025 - Funciona 100% offline</p>
     </footer>
 
     <script>
@@ -499,47 +555,24 @@
             monthFilter.addEventListener('change', applyFilters);
             yearFilter.addEventListener('change', applyFilters);
         });
-
-        // Instruções de uso
-        function showInstructions() {
-            alert(`COMO USAR ESTE DASHBOARD:
-
-📊 DADOS DE EXEMPLO:
-- O dashboard já vem com dados realistas
-- Clique em "Atualizar" para regenerar
-
-📁 CARREGAR SEUS DADOS:
-- Use o botão "CSV" para carregar seu arquivo
-- Formato necessário: colunas "Data" e "Volume"
-- Datas no formato: DD/MM/AAAA ou AAAA-MM-DD
-
-🔍 FILTRAR:
-- Use os menus para filtrar por mês e ano
-- Selecione "Todos" para ver dados completos
-
-💾 EXPORTAR:
-- Use "Exportar" para baixar relatório em JSON
-
-📱 RESPONSIVO:
-- Funciona em celulares e tablets`);
-        }
         
         function loadData() {
             hideError();
-            updateConnectionStatus(true, 'Carregando dados...');
+            updateConnectionStatus(true, 'Carregando dados de exemplo...');
             
             try {
                 allData = generateRealisticSampleData();
                 populateYearFilter();
                 applyFilters();
-                updateConnectionStatus(true, 'Dados carregados');
+                updateConnectionStatus(true, 'Dados carregados com sucesso');
             } catch (error) {
-                console.error('Erro:', error);
+                console.error('Erro ao carregar dados:', error);
                 showError('Erro ao carregar dados: ' + error.message);
             }
         }
         
         function generateRealisticSampleData() {
+            console.log('Gerando dados de exemplo realistas...');
             const data = [];
             const startDate = new Date('2023-01-01');
             const endDate = new Date('2023-12-31');
@@ -577,6 +610,7 @@
                 currentDate.setDate(currentDate.getDate() + 1);
             }
             
+            console.log('Dados gerados:', data.length, 'registros');
             return data;
         }
         
@@ -597,25 +631,26 @@
                         allData = processedData;
                         populateYearFilter();
                         applyFilters();
-                        updateConnectionStatus(true, 'Dados carregados');
+                        updateConnectionStatus(true, 'Dados carregados do arquivo: ' + file.name);
                     } else {
-                        throw new Error('Nenhum dado válido encontrado');
+                        throw new Error('Nenhum dado válido encontrado no arquivo');
                     }
                 } catch (error) {
-                    showError('Erro: ' + error.message);
+                    console.error('Erro ao processar arquivo:', error);
+                    showError('Erro ao processar arquivo: ' + error.message);
                     loadData();
                 }
             };
             
             reader.onerror = function() {
-                showError('Erro ao ler arquivo');
+                showError('Erro ao ler o arquivo');
                 loadData();
             };
             
             if (file.name.endsWith('.csv')) {
                 reader.readAsText(file);
             } else {
-                showError('Use arquivo CSV');
+                showError('Formato de arquivo não suportado. Use CSV.');
                 loadData();
             }
         }
@@ -634,7 +669,7 @@
                     h.toLowerCase().includes('expedida') || h.toLowerCase().includes('quantidade'));
                 
                 if (dateIndex === -1 || volumeIndex === -1) {
-                    throw new Error('Colunas "Data" e "Volume" são obrigatórias');
+                    throw new Error('Colunas "Data" e "Volume/QNTD Expedida" são obrigatórias no CSV');
                 }
                 
                 for (let i = 1; i < lines.length; i++) {
@@ -832,6 +867,23 @@
                     maxIncreaseWeekday = parseInt(weekday);
                 }
             });
+
+            // Calcular variações diárias
+            const dailyVariations = [];
+            for (let i = 1; i < sortedData.length; i++) {
+                const current = sortedData[i];
+                const previous = sortedData[i-1];
+                const variation = current.volume - previous.volume;
+                const variationPercent = ((variation / previous.volume) * 100);
+                
+                dailyVariations.push({
+                    date: current.date,
+                    volume: current.volume,
+                    variation: variation,
+                    variationPercent: variationPercent,
+                    isPositive: variation > 0
+                });
+            }
             
             return {
                 totalVolume,
@@ -842,7 +894,8 @@
                 monthlyAverages,
                 increaseByWeekday,
                 maxIncreaseWeekday: { day: maxIncreaseWeekday, frequency: maxIncreaseFrequency },
-                rawData: sortedData
+                rawData: sortedData,
+                dailyVariations: dailyVariations
             };
         }
         
@@ -974,6 +1027,64 @@
                     }
                 }
             });
+
+            // NOVO GRÁFICO: Variação Diária
+            const variationCtx = document.getElementById('daily-variation-chart').getContext('2d');
+            const variationDates = analysis.dailyVariations.map(item => moment(item.date).format('DD/MM'));
+            const variationData = analysis.dailyVariations.map(item => item.variation);
+            const variationColors = analysis.dailyVariations.map(item => 
+                item.variation > 0 ? '#28a745' : '#dc3545'
+            );
+
+            // Simplificar dados para não sobrecarregar
+            const variationStep = Math.max(1, Math.floor(variationDates.length / 20));
+            const displayVariationDates = variationDates.filter((_, index) => index % variationStep === 0);
+            const displayVariationData = variationData.filter((_, index) => index % variationStep === 0);
+            const displayVariationColors = variationColors.filter((_, index) => index % variationStep === 0);
+
+            charts.variation = new Chart(variationCtx, {
+                type: 'bar',
+                data: {
+                    labels: displayVariationDates,
+                    datasets: [{
+                        label: 'Variação Diária',
+                        data: displayVariationData,
+                        backgroundColor: displayVariationColors,
+                        borderColor: displayVariationColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    const percent = analysis.dailyVariations[context.dataIndex * variationStep]?.variationPercent.toFixed(1) || '0';
+                                    return `Variação: ${value > 0 ? '+' : ''}${value.toLocaleString('pt-BR')} (${value > 0 ? '+' : ''}${percent}%)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Data'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Variação do Volume'
+                            },
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
         }
         
         function generateTrendSummary(analysis) {
@@ -981,8 +1092,18 @@
             const summaryElement = document.getElementById('trend-summary');
             const recommendationsElement = document.getElementById('recommendations');
             
+            // Análise de variações
+            const positiveVariations = analysis.dailyVariations.filter(v => v.variation > 0).length;
+            const negativeVariations = analysis.dailyVariations.filter(v => v.variation < 0).length;
+            const totalVariations = analysis.dailyVariations.length;
+            const positivePercentage = totalVariations > 0 ? ((positiveVariations / totalVariations) * 100).toFixed(1) : 0;
+
+            // Maior aumento e queda
+            const maxIncrease = analysis.dailyVariations.reduce((max, v) => v.variation > max.variation ? v : max, {variation: -Infinity});
+            const maxDecrease = analysis.dailyVariations.reduce((min, v) => v.variation < min.variation ? v : min, {variation: Infinity});
+
             let summaryHTML = `
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; font-size: 0.9rem;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
                     <div>
                         <p><strong>Volume Total:</strong> ${analysis.totalVolume.toLocaleString('pt-BR')}</p>
                         <p><strong>Média Diária:</strong> ${analysis.averageDaily.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}</p>
@@ -990,21 +1111,9 @@
                     </div>
                     <div>
                         <p><strong>Melhor Mês:</strong> ${analysis.maxMonth.month || '-'}</p>
-            `;
-            
-            if (analysis.maxIncreaseWeekday.day !== null) {
-                summaryHTML += `<p><strong>Dia com Mais Aumentos:</strong> ${weekdayNames[analysis.maxIncreaseWeekday.day]}</p>`;
-            }
-            
-            const volumes = analysis.rawData.map(item => item.volume);
-            let increases = 0;
-            for (let i = 1; i < volumes.length; i++) {
-                if (volumes[i] > volumes[i-1]) increases++;
-            }
-            const increasePercentage = volumes.length > 1 ? (increases / (volumes.length - 1) * 100).toFixed(1) : 0;
-            
-            summaryHTML += `
-                        <p><strong>Tendência:</strong> ${increasePercentage > 50 ? 'Crescente' : 'Estável'} (${increasePercentage}%)</p>
+                        <p><strong>Dias com Aumento:</strong> ${positivePercentage}% (${positiveVariations} de ${totalVariations})</p>
+                        <p><strong>Maior Aumento:</strong> <span class="variation-positive">+${maxIncrease.variation?.toLocaleString('pt-BR') || 0}</span></p>
+                        <p><strong>Maior Queda:</strong> <span class="variation-negative">${maxDecrease.variation?.toLocaleString('pt-BR') || 0}</span></p>
                     </div>
                 </div>
             `;
@@ -1015,10 +1124,15 @@
             if (analysis.maxWeekday.day !== null) {
                 recommendationsHTML += `<p><i class="fas fa-check-circle"></i> Focar recursos nas ${weekdayNames[analysis.maxWeekday.day].toLowerCase()}s</p>`;
             }
-            if (increasePercentage > 60) {
-                recommendationsHTML += `<p><i class="fas fa-check-circle"></i> Considerar expansão de capacidade</p>`;
-            } else if (increasePercentage < 40) {
-                recommendationsHTML += `<p><i class="fas fa-exclamation-triangle"></i> Analisar tendência decrescente</p>`;
+            
+            if (positivePercentage > 60) {
+                recommendationsHTML += `<p><i class="fas fa-check-circle"></i> Tendência positiva forte - considerar expansão</p>`;
+            } else if (positivePercentage < 40) {
+                recommendationsHTML += `<p><i class="fas fa-exclamation-triangle"></i> Muitas quedas - analisar causas</p>`;
+            }
+
+            if (maxIncrease.variation > 500) {
+                recommendationsHTML += `<p><i class="fas fa-chart-line"></i> Picos significativos detectados - otimizar para esses períodos</p>`;
             }
             
             recommendationsElement.innerHTML = recommendationsHTML || '<p>Analise os gráficos para mais insights</p>';
@@ -1033,12 +1147,25 @@
             sortedData.forEach((item, index) => {
                 const row = document.createElement('tr');
                 
-                let variation = '-';
-                if (index < data.length - 1) {
-                    const prevItem = data.find(d => d.date < item.date);
-                    if (prevItem) {
-                        const change = ((item.volume - prevItem.volume) / prevItem.volume * 100);
-                        variation = `${change > 0 ? '+' : ''}${change.toFixed(1)}%`;
+                let variationPercent = '-';
+                let variationVolume = '-';
+                let variationClass = 'variation-neutral';
+                let variationBadgeClass = 'neutral';
+                
+                if (index < sortedData.length - 1) {
+                    const prevItem = sortedData[index + 1];
+                    const variation = item.volume - prevItem.volume;
+                    const changePercent = ((variation / prevItem.volume) * 100);
+                    
+                    variationPercent = `${changePercent > 0 ? '+' : ''}${changePercent.toFixed(1)}%`;
+                    variationVolume = `${variation > 0 ? '+' : ''}${variation.toLocaleString('pt-BR')}`;
+                    
+                    if (changePercent > 0) {
+                        variationClass = 'variation-positive';
+                        variationBadgeClass = 'positive';
+                    } else if (changePercent < 0) {
+                        variationClass = 'variation-negative';
+                        variationBadgeClass = 'negative';
                     }
                 }
                 
@@ -1047,7 +1174,13 @@
                     <td>${item.volume.toLocaleString('pt-BR')}</td>
                     <td>${item.weekday}</td>
                     <td>${item.monthYear}</td>
-                    <td>${variation}</td>
+                    <td>
+                        <span class="variation-badge ${variationBadgeClass}">
+                            <i class="fas ${variationBadgeClass === 'positive' ? 'fa-arrow-up' : variationBadgeClass === 'negative' ? 'fa-arrow-down' : 'fa-minus'}"></i>
+                            ${variationPercent}
+                        </span>
+                    </td>
+                    <td class="${variationClass}">${variationVolume}</td>
                 `;
                 
                 tableBody.appendChild(row);
@@ -1056,7 +1189,7 @@
             if (data.length > 30) {
                 const infoRow = document.createElement('tr');
                 infoRow.innerHTML = `
-                    <td colspan="5" style="text-align: center; background-color: #f8f9fa; font-style: italic;">
+                    <td colspan="6" style="text-align: center; background-color: #f8f9fa; font-style: italic;">
                         Mostrando 30 registros de ${data.length} no total
                     </td>
                 `;
