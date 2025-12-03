@@ -2,9 +2,19 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <!-- Modificação da viewport para manter layout desktop em dispositivos móveis -->
-    <meta name="viewport" content="width=1400, initial-scale=0.65, maximum-scale=1.0, user-scalable=yes">
-    <title>Dashboard de Análise de Volume - Ecommerce</title>
+    <meta name="viewport" content="width=1400, initial-scale=0.25, maximum-scale=1.0, user-scalable=yes">
+    <title>Expedido BRSP15 - Dashboard de Análise de Volume</title>
+    
+    <!-- Favicon - Ícone Expedido BRSP15 (Caminhão) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚚</text></svg>" type="image/svg+xml">
+    <link rel="shortcut icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚚</text></svg>" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚚</text></svg>" type="image/svg+xml">
+    
+    <!-- Meta tags para SEO e compartilhamento -->
+    <meta name="description" content="Dashboard de análise de volume expedido BRSP15 - Monitoramento e insights de logística">
+    <meta name="keywords" content="BRSP15, volume, expedição, dashboard, logística, análise">
+    <meta name="author" content="Eliane ERB">
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/locale/pt-br.js"></script>
@@ -39,8 +49,8 @@
             color: var(--text);
             line-height: 1.6;
             font-size: 16px;
-            min-width: 1000px; /* Garante que o layout não quebre em telas muito pequenas */
-            overflow-x: auto; /* Permite rolagem horizontal se necessário */
+            min-width: 1000px;
+            overflow-x: auto;
         }
 
         .container {
@@ -57,6 +67,26 @@
             margin-bottom: 20px;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.3;
+            animation: moveBackground 20s linear infinite;
+        }
+
+        @keyframes moveBackground {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(30px, 30px); }
         }
 
         h1 {
@@ -66,6 +96,21 @@
             align-items: center;
             justify-content: center;
             gap: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 .brand-icon {
+            background: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         .description {
@@ -73,6 +118,19 @@
             opacity: 0.9;
             max-width: 800px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+        }
+
+        .brand-subtitle {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 5px;
+            font-weight: 500;
         }
 
         .controls {
@@ -86,6 +144,7 @@
             margin-bottom: 25px;
             flex-wrap: wrap;
             gap: 15px;
+            border: 1px solid var(--border);
         }
 
         .btn {
@@ -109,7 +168,7 @@
         }
 
         .btn i {
-            font-size: 1rem;
+            font-size: 1.rem;
         }
 
         .btn-success {
@@ -131,6 +190,7 @@
             border-radius: 6px;
             border: 1px solid var(--border);
             background: var(--card-bg);
+            font-size: 0.9rem;
         }
 
         .stats-grid {
@@ -148,6 +208,24 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             border-left: 4px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
         }
 
         .stat-card:hover {
@@ -181,6 +259,7 @@
             padding: 25px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--border);
         }
 
         .card:hover {
@@ -283,6 +362,8 @@
             color: var(--text-light);
             font-size: 0.9rem;
             border-top: 1px solid var(--border);
+            background: var(--card-bg);
+            border-radius: 8px;
         }
 
         .insight-card {
@@ -310,6 +391,13 @@
 
         .status-connected {
             background-color: #28a745;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
 
         .status-disconnected {
@@ -534,7 +622,6 @@
             margin-top: 5px;
         }
 
-        /* Estilos para a nova seção de probabilidade */
         .probability-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -577,7 +664,6 @@
             color: var(--text-light);
         }
 
-        /* Estilos para a nova seção de dias com maior volume por mês */
         .month-peak-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -623,7 +709,311 @@
             color: var(--text-light);
         }
 
-        /* Ajustes para dispositivos móveis - mantendo layout desktop */
+        /* Estilos para o filtro múltiplo de meses */
+        .multi-month-filter {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            position: relative;
+        }
+
+        .multi-month-filter select[multiple] {
+            min-width: 150px;
+            height: 120px;
+            padding: 5px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            font-size: 0.9rem;
+        }
+
+        .multi-month-filter select[multiple] option {
+            padding: 5px 8px;
+            border-radius: 4px;
+            margin-bottom: 2px;
+        }
+
+        .multi-month-filter select[multiple] option:checked {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .multi-month-filter select[multiple] option:hover {
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+
+        .month-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .btn-small {
+            background: var(--info);
+            color: white;
+            border: none;
+            padding: 5px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            flex: 1;
+            min-width: 50px;
+            justify-content: center;
+        }
+
+        .btn-small:hover {
+            background: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .btn-small.selected {
+            background: var(--success);
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .month-group-controls {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 4px;
+            margin-top: 5px;
+        }
+
+        .month-group-btn {
+            background: var(--warning);
+            color: white;
+            border: none;
+            padding: 4px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .month-group-btn:hover {
+            background: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .month-group-btn.selected {
+            background: var(--success);
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .month-selection-info {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 5px;
+            text-align: center;
+            padding: 3px;
+            background: rgba(67, 97, 238, 0.05);
+            border-radius: 4px;
+        }
+
+        /* Instruções para seleção múltipla */
+        .multi-select-instruction {
+            position: absolute;
+            top: -25px;
+            left: 0;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            z-index: 10;
+        }
+
+        /* Animações para as setas */
+        @keyframes arrowUp {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+            100% { transform: translateY(0); }
+        }
+
+        @keyframes arrowDown {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(3px); }
+            100% { transform: translateY(0); }
+        }
+
+        .arrow-up-animation {
+            animation: arrowUp 1.5s infinite ease-in-out;
+            display: inline-block;
+        }
+
+        .arrow-down-animation {
+            animation: arrowDown 1.5s infinite ease-in-out;
+            display: inline-block;
+        }
+
+        .probability-value-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .arrow-icon {
+            font-size: 1.5rem;
+        }
+
+        .arrow-up {
+            color: var(--positive);
+        }
+
+        .arrow-down {
+            color: var(--negative);
+        }
+
+        /* Estilos para análise de tendência */
+        .trend-analysis-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .trend-analysis-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--info);
+        }
+
+        .trend-analysis-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .trend-analysis-title {
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+
+        .trend-analysis-type {
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+
+        .trend-analysis-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .trend-chart-container {
+            height: 200px;
+            position: relative;
+        }
+
+        .trend-analysis-text {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .trend-summary {
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .trend-details {
+            background: rgba(0, 0, 0, 0.02);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        .trend-details h5 {
+            margin-bottom: 8px;
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+
+        .trend-details ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .trend-details li {
+            margin-bottom: 5px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .trend-details li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        .trend-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .trend-metric {
+            text-align: center;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: 6px;
+        }
+
+        .trend-metric-value {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .trend-metric-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .chart-type-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .chart-type-btn {
+            background: var(--light);
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .chart-type-btn:hover {
+            background: rgba(67, 97, 238, 0.1);
+        }
+
+        .chart-type-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
         @media (max-width: 1400px) {
             body {
                 font-size: 14px;
@@ -640,10 +1030,17 @@
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+            
+            .month-group-controls {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .trend-analysis-content {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 768px) {
-            /* Manter o layout desktop, apenas ajustar alguns elementos */
             body {
                 min-width: 768px;
                 font-size: 12px;
@@ -698,25 +1095,97 @@
             .data-table th, .data-table td {
                 padding: 8px 10px;
             }
+            
+            .multi-month-filter select[multiple] {
+                min-width: 120px;
+                height: 100px;
+                font-size: 0.8rem;
+            }
+            
+            .multi-select-instruction {
+                display: none;
+            }
+            
+            .month-group-controls {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .btn-small {
+                font-size: 0.7rem;
+                padding: 4px 6px;
+            }
+            
+            .month-group-btn {
+                font-size: 0.65rem;
+                padding: 3px 5px;
+            }
         }
 
-        /* Estilo para rolagem horizontal em dispositivos móveis */
         .table-container {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             margin-bottom: 15px;
             border-radius: 8px;
         }
+        
+        .filter-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .month-filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .month-filter-header h4 {
+            margin: 0;
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+        
+        .month-buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .comparative-chart-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .comparative-chart-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        .chart-controls-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
-    <!-- O restante do HTML permanece exatamente igual -->
     <div class="container">
         <header>
-            <h1><i class="fas fa-chart-line"></i> Dashboard de Análise de Volume </h1>
+            <h1>
+                <span class="brand-icon">🚚</span>
+                Dashboard de Análise de Volume
+            </h1>
             <p class="description">
                 <span id="connection-status" class="status-indicator status-connected"></span>
-                Dashboard interativo - Análise de volume expedido - BRSP15 
+                <strong>Expedido BRSP15</strong> - Dashboard interativo para análise de volume expedido
+                <div class="brand-subtitle">Monitoramento e insights </div>
                 <div class="connection-info" id="connection-info">Carregando dados do arquivo CSV...</div>
             </p>
         </header>
@@ -726,21 +1195,75 @@
                 <i class="fas fa-sync-alt"></i> Atualizar Dados
             </button>
             <div class="date-filter">
-                <select id="month-filter">
-                    <option value="">Todos os meses</option>
-                    <option value="1">Janeiro</option>
-                    <option value="2">Fevereiro</option>
-                    <option value="3">Março</option>
-                    <option value="4">Abril</option>
-                    <option value="5">Maio</option>
-                    <option value="6">Junho</option>
-                    <option value="7">Julho</option>
-                    <option value="8">Agosto</option>
-                    <option value="9">Setembro</option>
-                    <option value="10">Outubro</option>
-                    <option value="11">Novembro</option>
-                    <option value="12">Dezembro</option>
-                </select>
+                <div class="multi-month-filter">
+                    <div class="multi-select-instruction">
+                        <i class="fas fa-mouse-pointer"></i> Use Ctrl+Click ou Shift+Click para seleção múltipla
+                    </div>
+                    <div class="filter-section">
+                        <div class="month-filter-header">
+                            <h4>Seleção de Meses</h4>
+                        </div>
+                        <select id="month-filter" multiple size="5">
+                            <option value="1">Janeiro</option>
+                            <option value="2">Fevereiro</option>
+                            <option value="3">Março</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Maio</option>
+                            <option value="6">Junho</option>
+                            <option value="7">Julho</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Setembro</option>
+                            <option value="10">Outubro</option>
+                            <option value="11">Novembro</option>
+                            <option value="12">Dezembro</option>
+                        </select>
+                        
+                        <div class="month-buttons-container">
+                            <div class="month-controls">
+                                <button type="button" id="select-all-months" class="btn-small">
+                                    <i class="fas fa-check-square"></i> Todos
+                                </button>
+                                <button type="button" id="clear-months" class="btn-small">
+                                    <i class="fas fa-times"></i> Limpar
+                                </button>
+                            </div>
+                            
+                            <div class="month-selection-info" id="month-selection-info">
+                                Todos os meses selecionados
+                            </div>
+                            
+                            <div class="month-group-controls">
+                                <button type="button" id="select-2-months" class="month-group-btn" title="Selecionar 2 meses">
+                                    2 Meses
+                                </button>
+                                <button type="button" id="select-3-months" class="month-group-btn" title="Selecionar 3 meses">
+                                    3 Meses
+                                </button>
+                                <button type="button" id="select-4-months" class="month-group-btn" title="Selecionar 4 meses">
+                                    4 Meses
+                                </button>
+                                <button type="button" id="select-5-months" class="month-group-btn" title="Selecionar 5 meses">
+                                    5 Meses
+                                </button>
+                                <button type="button" id="select-7-months" class="month-group-btn" title="Selecionar 7 meses">
+                                    7 Meses
+                                </button>
+                                <button type="button" id="select-8-months" class="month-group-btn" title="Selecionar 8 meses">
+                                    8 Meses
+                                </button>
+                                <button type="button" id="select-9-months" class="month-group-btn" title="Selecionar 9 meses">
+                                    9 Meses
+                                </button>
+                                <button type="button" id="select-10-months" class="month-group-btn" title="Selecionar 10 meses">
+                                    10 Meses
+                                </button>
+                                <button type="button" id="select-11-months" class="month-group-btn" title="Selecionar 11 meses">
+                                    11 Meses
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <select id="year-filter">
                     <option value="">Todos os anos</option>
                 </select>
@@ -812,7 +1335,64 @@
                 </div>
             </div>
 
-            <!-- Nova seção horizontal para Probabilidade e Dias com Maior Volume por Mês -->
+            <!-- NOVA SEÇÃO: Análise Comparativa Dinâmica -->
+            <div class="card">
+                <h2><i class="fas fa-chart-bar"></i> Análise Comparativa de Volume por Mês</h2>
+                
+                <div class="comparative-chart-controls">
+                    <div class="comparative-chart-title">Comparativo Dinâmico de Volume Total</div>
+                    <div class="chart-controls-group">
+                        <div class="chart-type-selector">
+                            <button type="button" id="chart-type-bar" class="chart-type-btn active" data-type="bar">
+                                <i class="fas fa-chart-bar"></i> Barras
+                            </button>
+                            <button type="button" id="chart-type-line" class="chart-type-btn" data-type="line">
+                                <i class="fas fa-chart-line"></i> Linhas
+                            </button>
+                            <button type="button" id="chart-type-radar" class="chart-type-btn" data-type="radar">
+                                <i class="fas fa-chart-pie"></i> Radar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="comparative-monthly-chart"></canvas>
+                </div>
+                
+                <div class="trend-analysis-container">
+                    <div class="trend-analysis-card">
+                        <div class="trend-analysis-header">
+                            <div class="trend-analysis-title">Análise de Tendência Mensal</div>
+                            <div class="trend-analysis-type" id="trend-type-indicator">Analisando...</div>
+                        </div>
+                        
+                        <div class="trend-analysis-content">
+                            <div class="trend-chart-container">
+                                <canvas id="trend-analysis-chart"></canvas>
+                            </div>
+                            
+                            <div class="trend-analysis-text">
+                                <div class="trend-summary" id="trend-summary-text">
+                                    Carregando análise de tendência...
+                                </div>
+                                
+                                <div class="trend-details">
+                                    <h5><i class="fas fa-chart-line"></i> Principais Insights:</h5>
+                                    <ul id="trend-insights-list">
+                                        <li>Analisando padrões mensais...</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="trend-metrics" id="trend-metrics-container">
+                                    <!-- Métricas serão preenchidas via JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="card">
                 <h2><i class="fas fa-chart-pie"></i> Análise de Probabilidade e Picos Mensais</h2>
                 
@@ -838,7 +1418,6 @@
                 </div>
             </div>
             
-            <!-- Nova Seção: Análise Estatística -->
             <div class="card">
                 <h2><i class="fas fa-chart-bar"></i> Análise Estatística </h2>
                 
@@ -952,31 +1531,29 @@
                     </div>
                 </div>
 
-                <div style="display: none;"> <!--//ocultação desta seção -->
-
-                <div class="analysis-section">
-                    <h3><i class="fas fa-check-circle"></i> Validação do Modelo</h3>
-                    <div class="model-performance">
-                        <div class="performance-item">
-                            <div class="performance-value" id="stat-mae">0</div>
-                            <div class="performance-label">MAE (Erro Absoluto Médio)</div>
-                        </div>
-                        <div class="performance-item">
-                            <div class="performance-value" id="stat-rmse">0</div>
-                            <div class="performance-label">RMSE (Raiz do Erro Quadrático Médio)</div>
-                        </div>
-                        <div class="performance-item">
-                            <div class="performance-value" id="stat-mape">0%</div>
-                            <div class="performance-label">MAPE (Erro Percentual Absoluto Médio)</div>
-                        </div>
-                        <div class="performance-item">
-                            <div class="performance-value" id="stat-accuracy">0%</div>
-                            <div class="performance-label">Acurácia do Modelo</div>
+                <div style="display: none;">
+                    <div class="analysis-section">
+                        <h3><i class="fas fa-check-circle"></i> Validação do Modelo</h3>
+                        <div class="model-performance">
+                            <div class="performance-item">
+                                <div class="performance-value" id="stat-mae">0</div>
+                                <div class="performance-label">MAE (Erro Absoluto Médio)</div>
+                            </div>
+                            <div class="performance-item">
+                                <div class="performance-value" id="stat-rmse">0</div>
+                                <div class="performance-label">RMSE (Raiz do Erro Quadrático Médio)</div>
+                            </div>
+                            <div class="performance-item">
+                                <div class="performance-value" id="stat-mape">0%</div>
+                                <div class="performance-label">MAPE (Erro Percentual Absoluto Médio)</div>
+                            </div>
+                            <div class="performance-item">
+                                <div class="performance-value" id="stat-accuracy">0%</div>
+                                <div class="performance-label">Acurácia do Modelo</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                </div>        
-<!-- //1 div acima de ocultação desta seção// -->
 
                 <div class="analysis-section">
                     <h3><i class="fas fa-crystal-ball"></i> Análise Preditiva</h3>
@@ -1075,10 +1652,9 @@
     </div>
     
     <footer>
-        <p>Dashboard de Análise de Volume. Desenvolvido por Eliane ERB - Conectado ao Google Sheets &copy; 2025</p>
+        <p><strong>Expedido BRSP15</strong> - Dashboard de Análise de Volume. Desenvolvido por Eliane ERB - Conectado ao Google Sheets &copy; 2025</p>
     </footer>
 
-    <!-- O JavaScript permanece exatamente o mesmo -->
     <script>
         // Elementos da DOM
         const errorElement = document.getElementById('error-message');
@@ -1094,6 +1670,13 @@
         const sortOrderSelect = document.getElementById('sort-order');
         const probabilityGrid = document.getElementById('probability-grid');
         const monthPeakGrid = document.getElementById('month-peak-grid');
+        const monthSelectionInfo = document.getElementById('month-selection-info');
+        
+        // Novos elementos para análise comparativa
+        const trendSummaryText = document.getElementById('trend-summary-text');
+        const trendInsightsList = document.getElementById('trend-insights-list');
+        const trendMetricsContainer = document.getElementById('trend-metrics-container');
+        const trendTypeIndicator = document.getElementById('trend-type-indicator');
         
         // Dados em memória
         let allData = [];
@@ -1101,6 +1684,8 @@
         let charts = {};
         let currentSortColumn = 'date';
         let currentSortOrder = 'desc';
+        let currentMonthGroup = null;
+        let currentChartType = 'bar';
         
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
@@ -1111,10 +1696,32 @@
             refreshButton.addEventListener('click', loadCSVData);
             uploadButton.addEventListener('click', () => fileInput.click());
             fileInput.addEventListener('change', handleFileUpload);
-            monthFilter.addEventListener('change', applyFilters);
+            monthFilter.addEventListener('change', function() {
+                setTimeout(applyFilters, 100);
+            });
             yearFilter.addEventListener('change', applyFilters);
             sortColumnSelect.addEventListener('change', updateSorting);
             sortOrderSelect.addEventListener('change', updateSorting);
+            
+            // Adicionar eventos para os botões de controle de meses
+            document.getElementById('select-all-months').addEventListener('click', selectAllMonths);
+            document.getElementById('clear-months').addEventListener('click', clearMonths);
+            
+            // Adicionar eventos para os botões de grupo de meses
+            document.getElementById('select-2-months').addEventListener('click', () => selectRandomMonths(2));
+            document.getElementById('select-3-months').addEventListener('click', () => selectRandomMonths(3));
+            document.getElementById('select-4-months').addEventListener('click', () => selectRandomMonths(4));
+            document.getElementById('select-5-months').addEventListener('click', () => selectRandomMonths(5));
+            document.getElementById('select-7-months').addEventListener('click', () => selectRandomMonths(7));
+            document.getElementById('select-8-months').addEventListener('click', () => selectRandomMonths(8));
+            document.getElementById('select-9-months').addEventListener('click', () => selectRandomMonths(9));
+            document.getElementById('select-10-months').addEventListener('click', () => selectRandomMonths(10));
+            document.getElementById('select-11-months').addEventListener('click', () => selectRandomMonths(11));
+            
+            // Adicionar eventos para os botões de tipo de gráfico
+            document.getElementById('chart-type-bar').addEventListener('click', () => changeChartType('bar'));
+            document.getElementById('chart-type-line').addEventListener('click', () => changeChartType('line'));
+            document.getElementById('chart-type-radar').addEventListener('click', () => changeChartType('radar'));
             
             // Adicionar eventos de clique nos cabeçalhos da tabela
             document.querySelectorAll('.data-table th').forEach(header => {
@@ -1126,6 +1733,9 @@
                     }
                 });
             });
+            
+            // Selecionar todos os meses por padrão
+            selectAllMonths();
         });
         
         // Carregar dados do arquivo CSV incluído
@@ -1356,26 +1966,34 @@
 06/11/2025,51156
 07/11/2025,53415
 08/11/2025,38504,7
-09/11/2025,33053,1,Domingo,,,,,,,,,,,,,,,,
-10/11/2025,57363,2,Segunda,,,,,,,,,,,,,,,,
-11/11/2025,61291,3,Terça,,,,,,,,,,,,,,,,
-12/11/2025,69431,4,Quarta,,,,,,,,,,,,,,,,
-13/11/2025,57416,5,Quinta,,,,,,,,,,,,,,,
-14/11/2025,57710,6,Sexta,,,,,,,,,,,,,,,
-15/11/2025,33821,7,Sábado,,,,,,,,,,,,,,,
-16/11/2025,27108,1,Domingo,,,,,,,,,,,,,,,
-17/11/2025,56651,2,Segunda,,,,,,,,,,,,,,,
-18/11/2025,67509,3,Terça,,,,,,,,,,,,,,,
-19/11/2025,60152,4,Quarta,,,,,,,,,,,,,,,
-20/11/2025,36801,5,Quinta,,,,,,,,,,,,,,,
-21/11/2025,57528,6,Sexta,,,,,,,,,,,,,,,
+09/11/2025,33053,1,Domingo
+10/11/2025,57363,2,Segunda
+11/11/2025,61291,3,Terça
+12/11/2025,69431,4,Quarta
+13/11/2025,57416,5,Quinta
+14/11/2025,57710,6,Sexta
+15/11/2025,33821,7,Sábado
+16/11/2025,27108,1,Domingo
+17/11/2025,56651,2,Segunda
+18/11/2025,67509,3,Terça
+19/11/2025,60152,4,Quarta
+20/11/2025,36801,5,Quinta
+21/11/2025,57528,6,Sexta
 22/11/2025,40330
-23/11/2025,30919    
-24/11/2025,
-25/11/2025,    
-26/11/2025,
-27/11/2025,  
-28/11/2025 `;   
+23/11/2025,30919
+24/11/2025,52865
+25/11/2025,59280
+26/11/2025,69105
+27/11/2025,53203
+28/11/2025,53154
+29/11/2025,41231
+30/11/2025,23362
+01/12/2025,40617
+02/12/2025,61661
+03/12/2025,
+04/12/2025,
+05/12/2025,
+06/12/2025`;
                 
                 allData = processCSVData(csvData);
                 populateYearFilter();
@@ -1387,45 +2005,38 @@
             }
         }
         
-        // Processar dados do CSV - CORRIGIDA
+        // Processar dados do CSV
         function processCSVData(csvContent) {
             const weekdays = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
             const processedData = [];
             
             const lines = csvContent.split('\n').filter(line => line.trim() !== '');
             
-            // Pular cabeçalho
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line) continue;
                 
-                // Usar uma abordagem mais robusta para parsing CSV
                 const values = parseCSVLine(line);
                 
                 try {
-                    // Verificar se temos pelo menos 2 colunas (Data, Volume)
                     if (values.length < 2) continue;
                     
                     const dateStr = values[0]?.replace(/"/g, '').trim();
                     const volumeStr = values[1]?.replace(/"/g, '').trim();
                     
-                    // Verificar se temos dados válidos
                     if (!dateStr || !volumeStr || volumeStr === '') continue;
                     
-                    // Converter volume para número
                     const volume = parseFloat(volumeStr.replace(/\./g, '').replace(',', '.'));
                     
                     if (isNaN(volume) || volume <= 0) continue;
                     
-                    // Converter data do formato DD/MM/YYYY
                     const dateParts = dateStr.split('/');
                     if (dateParts.length !== 3) continue;
                     
                     const day = parseInt(dateParts[0]);
-                    const month = parseInt(dateParts[1]) - 1; // Mês é 0-indexed no JavaScript
+                    const month = parseInt(dateParts[1]) - 1;
                     const year = parseInt(dateParts[2]);
                     
-                    // Corrigir ano se necessário
                     const correctedYear = year < 100 ? year + 2000 : year;
                     
                     const date = new Date(correctedYear, month, day);
@@ -1491,7 +2102,6 @@
                 showError('Formato de arquivo não suportado. Use CSV.');
             }
             
-            // Resetar o input de arquivo para permitir carregar o mesmo arquivo novamente
             fileInput.value = '';
         }
         
@@ -1528,7 +2138,7 @@
         }
         
         function populateYearFilter() {
-            const years = [...new Set(allData.map(item => item.year))].sort();
+            const years = [...new Set(allData.map(item => item.year))].sort((a, b) => b - a);
             yearFilter.innerHTML = '<option value="">Todos os anos</option>';
             
             years.forEach(year => {
@@ -1539,16 +2149,96 @@
             });
         }
         
+        function selectAllMonths() {
+            currentMonthGroup = 'all';
+            updateMonthGroupButtons();
+            const monthFilter = document.getElementById('month-filter');
+            for (let i = 0; i < monthFilter.options.length; i++) {
+                monthFilter.options[i].selected = true;
+            }
+            applyFilters();
+        }
+        
+        function clearMonths() {
+            currentMonthGroup = null;
+            updateMonthGroupButtons();
+            const monthFilter = document.getElementById('month-filter');
+            for (let i = 0; i < monthFilter.options.length; i++) {
+                monthFilter.options[i].selected = false;
+            }
+            applyFilters();
+        }
+        
+        function selectRandomMonths(count) {
+            currentMonthGroup = count;
+            updateMonthGroupButtons();
+            
+            const allMonths = Array.from({length: 12}, (_, i) => i + 1);
+            const shuffledMonths = [...allMonths].sort(() => Math.random() - 0.5);
+            const selectedMonths = shuffledMonths.slice(0, count);
+            
+            const monthFilter = document.getElementById('month-filter');
+            for (let i = 0; i < monthFilter.options.length; i++) {
+                monthFilter.options[i].selected = selectedMonths.includes(parseInt(monthFilter.options[i].value));
+            }
+            applyFilters();
+        }
+        
+        function updateMonthGroupButtons() {
+            // Remover classe 'selected' de todos os botões de grupo
+            document.querySelectorAll('.month-group-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Adicionar classe 'selected' ao botão ativo
+            if (currentMonthGroup) {
+                const buttonId = currentMonthGroup === 'all' ? 'select-all-months' : `select-${currentMonthGroup}-months`;
+                const button = document.getElementById(buttonId);
+                if (button) {
+                    button.classList.add('selected');
+                }
+            }
+        }
+        
+        function changeChartType(type) {
+            currentChartType = type;
+            
+            // Atualizar botões ativos
+            document.querySelectorAll('.chart-type-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`chart-type-${type}`).classList.add('active');
+            
+            // Recriar gráfico comparativo
+            updateComparativeAnalysis(filteredData);
+        }
+        
         function applyFilters() {
-            const selectedMonth = monthFilter.value;
+            const monthFilter = document.getElementById('month-filter');
+            const selectedMonths = Array.from(monthFilter.selectedOptions).map(option => option.value);
             const selectedYear = yearFilter.value;
+            
+            // Se nenhum mês estiver selecionado, selecione todos automaticamente
+            const monthsToFilter = selectedMonths.length > 0 ? selectedMonths : Array.from({length: 12}, (_, i) => (i + 1).toString());
             
             filteredData = allData.filter(item => {
                 let match = true;
-                if (selectedMonth) match = match && item.month.toString() === selectedMonth;
-                if (selectedYear) match = match && item.year.toString() === selectedYear;
+                
+                // Filtro por meses (múltipla seleção)
+                if (monthsToFilter.length > 0) {
+                    match = match && monthsToFilter.includes(item.month.toString());
+                }
+                
+                // Filtro por ano
+                if (selectedYear) {
+                    match = match && item.year.toString() === selectedYear;
+                }
+                
                 return match;
             });
+            
+            // Atualizar contador de meses selecionados
+            updateMonthSelectionInfo(selectedMonths);
             
             if (filteredData.length === 0) {
                 showError('Nenhum dado encontrado com esses filtros');
@@ -1556,6 +2246,32 @@
                 hideError();
                 updateDashboard();
             }
+        }
+        
+        function updateMonthSelectionInfo(selectedMonths) {
+            const monthNames = {
+                '1': 'Jan', '2': 'Fev', '3': 'Mar', '4': 'Abr',
+                '5': 'Mai', '6': 'Jun', '7': 'Jul', '8': 'Ago',
+                '9': 'Set', '10': 'Out', '11': 'Nov', '12': 'Dez'
+            };
+            
+            let infoText = '';
+            if (selectedMonths.length === 0) {
+                infoText = 'Todos os meses selecionados';
+            } else if (selectedMonths.length === 12) {
+                infoText = 'Todos os meses selecionados';
+            } else if (selectedMonths.length === 1) {
+                infoText = `1 mês: ${monthNames[selectedMonths[0]]}`;
+            } else {
+                const monthNamesList = selectedMonths.map(m => monthNames[m]).slice(0, 5);
+                if (selectedMonths.length > 5) {
+                    infoText = `${selectedMonths.length} meses: ${monthNamesList.join(', ')}...`;
+                } else {
+                    infoText = `${selectedMonths.length} meses: ${monthNamesList.join(', ')}`;
+                }
+            }
+            
+            monthSelectionInfo.textContent = infoText;
         }
         
         function updateDashboard() {
@@ -1567,26 +2283,23 @@
             updateStatisticalAnalysis(analysis);
             updateProbabilityAnalysis(analysis);
             updateMonthPeakAnalysis(analysis);
+            updateComparativeAnalysis(filteredData);
         }
         
-        // Função para atualizar a ordenação
         function updateSorting() {
             currentSortColumn = sortColumnSelect.value;
             currentSortOrder = sortOrderSelect.value;
             populateDataTable(filteredData);
         }
         
-        // Análise especializada para ecommerce
         function analyzeEcommerceData(data) {
             if (data.length === 0) return {};
             
             const totalVolume = data.reduce((sum, item) => sum + item.volume, 0);
             const averageDaily = totalVolume / data.length;
             
-            // Encontrar dia com maior volume
             const maxVolumeDay = data.reduce((max, item) => item.volume > max.volume ? item : max, data[0]);
             
-            // Estatísticas por dia da semana
             const weekdayStats = {};
             data.forEach(item => {
                 if (!weekdayStats[item.dayOfWeek]) {
@@ -1602,7 +2315,6 @@
                 weekdayAverages[weekday] = weekdayStats[weekday].total / weekdayStats[weekday].count;
             });
             
-            // Encontrar melhor dia da semana
             let maxWeekdayVolume = 0;
             let maxWeekday = null;
             Object.keys(weekdayAverages).forEach(weekday => {
@@ -1612,7 +2324,6 @@
                 }
             });
             
-            // Estatísticas mensais
             const monthlyStats = {};
             data.forEach(item => {
                 if (!monthlyStats[item.monthYear]) {
@@ -1627,7 +2338,6 @@
                 monthlyAverages[month] = monthlyStats[month].total / monthlyStats[month].count;
             });
             
-            // Encontrar melhor mês
             let maxMonthlyVolume = 0;
             let maxMonth = null;
             Object.keys(monthlyAverages).forEach(month => {
@@ -1637,14 +2347,9 @@
                 }
             });
             
-            // Análise de aumentos e quedas
             const increaseByWeekday = {};
             const decreaseByWeekday = {};
-            
-            // Análise de probabilidade por dia da semana
             const probabilityByWeekday = {};
-            
-            // Análise de picos mensais
             const monthPeaks = {};
             
             const sortedData = [...data].sort((a, b) => a.date - b.date);
@@ -1653,7 +2358,6 @@
                 const current = sortedData[i];
                 const previous = sortedData[i-1];
                 
-                // Inicializar contadores para o dia da semana atual
                 if (!probabilityByWeekday[current.dayOfWeek]) {
                     probabilityByWeekday[current.dayOfWeek] = {
                         increases: 0,
@@ -1678,7 +2382,6 @@
                 
                 probabilityByWeekday[current.dayOfWeek].total++;
                 
-                // Análise de picos mensais
                 const monthKey = current.monthYear;
                 if (!monthPeaks[monthKey]) {
                     monthPeaks[monthKey] = {
@@ -1695,7 +2398,6 @@
                 }
             }
             
-            // Calcular probabilidades
             Object.keys(probabilityByWeekday).forEach(weekday => {
                 const stats = probabilityByWeekday[weekday];
                 if (stats.total > 0) {
@@ -1707,7 +2409,6 @@
                 }
             });
             
-            // Encontrar dias com mais aumentos e quedas
             let maxIncreaseFrequency = 0;
             let maxIncreaseWeekday = null;
             Object.keys(increaseByWeekday).forEach(weekday => {
@@ -1726,10 +2427,9 @@
                 }
             });
             
-            // Calcular variações diárias e identificar picos
             const dailyVariations = [];
             const peaks = [];
-            const threshold = averageDaily * 1.5; // Pico = 50% acima da média
+            const threshold = averageDaily * 1.5;
 
             for (let i = 1; i < sortedData.length; i++) {
                 const current = sortedData[i];
@@ -1756,7 +2456,6 @@
                 }
             }
             
-            // Identificar tendências
             const last30Days = sortedData.slice(-30);
             const trend = last30Days.length >= 2 ? 
                 ((last30Days[last30Days.length-1].volume - last30Days[0].volume) / last30Days[0].volume * 100) : 0;
@@ -1796,7 +2495,6 @@
         function createCharts(analysis) {
             const weekdayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
             
-            // Destruir gráficos existentes
             Object.values(charts).forEach(chart => {
                 if (chart && typeof chart.destroy === 'function') {
                     chart.destroy();
@@ -1804,12 +2502,10 @@
             });
             charts = {};
             
-            // Gráfico de tendência de volume
             const trendCtx = document.getElementById('volume-trend-chart').getContext('2d');
             const trendDates = analysis.rawData.map(item => moment(item.date).format('DD/MM'));
             const trendVolumes = analysis.rawData.map(item => item.volume);
             
-            // Limitar número de pontos no gráfico para melhor performance
             const step = Math.max(1, Math.floor(trendDates.length / 30));
             const displayDates = trendDates.filter((_, index) => index % step === 0);
             const displayVolumes = trendVolumes.filter((_, index) => index % step === 0);
@@ -1863,7 +2559,6 @@
                 }
             });
             
-            // Gráfico volume por dia da semana
             const weekdayCtx = document.getElementById('weekday-volume-chart').getContext('2d');
             const weekdayLabels = [0,1,2,3,4,5,6].map(day => weekdayNames[day]);
             const weekdayData = [0,1,2,3,4,5,6].map(day => analysis.weekdayAverages[day] || 0);
@@ -1896,7 +2591,6 @@
                 }
             });
             
-            // Gráfico volume mensal
             const monthlyCtx = document.getElementById('monthly-volume-chart').getContext('2d');
             const monthlyLabels = Object.keys(analysis.monthlyAverages).sort();
             const monthlyData = monthlyLabels.map(month => analysis.monthlyAverages[month]);
@@ -1929,7 +2623,6 @@
                 }
             });
             
-            // Gráfico frequência de aumentos e quedas
             const increaseCtx = document.getElementById('increase-frequency-chart').getContext('2d');
             const increaseLabels = [0,1,2,3,4,5,6].map(day => weekdayNames[day]);
             const increaseData = [0,1,2,3,4,5,6].map(day => analysis.increaseByWeekday[day] || 0);
@@ -1968,7 +2661,6 @@
                 }
             });
 
-            // Gráfico de Variação Diária
             const variationCtx = document.getElementById('daily-variation-chart').getContext('2d');
             const variationDates = analysis.dailyVariations.map(item => moment(item.date).format('DD/MM'));
             const variationData = analysis.dailyVariations.map(item => item.variation);
@@ -2026,14 +2718,393 @@
             });
         }
         
-        // NOVA FUNÇÃO: Atualizar Análise de Probabilidade
+        function updateComparativeAnalysis(data) {
+            if (data.length === 0) return;
+            
+            // Calcular volume total por mês
+            const monthlyTotals = {};
+            const monthNames = {
+                '1': 'Jan', '2': 'Fev', '3': 'Mar', '4': 'Abr',
+                '5': 'Mai', '6': 'Jun', '7': 'Jul', '8': 'Ago',
+                '9': 'Set', '10': 'Out', '11': 'Nov', '12': 'Dez'
+            };
+            
+            data.forEach(item => {
+                const monthKey = item.month;
+                if (!monthlyTotals[monthKey]) {
+                    monthlyTotals[monthKey] = {
+                        total: 0,
+                        count: 0,
+                        monthName: monthNames[monthKey] || `Mês ${monthKey}`
+                    };
+                }
+                monthlyTotals[monthKey].total += item.volume;
+                monthlyTotals[monthKey].count++;
+            });
+            
+            // Ordenar meses
+            const sortedMonths = Object.keys(monthlyTotals).sort((a, b) => parseInt(a) - parseInt(b));
+            
+            // Preparar dados para o gráfico
+            const labels = sortedMonths.map(month => monthlyTotals[month].monthName);
+            const volumes = sortedMonths.map(month => monthlyTotals[month].total);
+            const counts = sortedMonths.map(month => monthlyTotals[month].count);
+            
+            // Calcular variações entre meses
+            const variations = [];
+            for (let i = 1; i < volumes.length; i++) {
+                const variation = ((volumes[i] - volumes[i-1]) / volumes[i-1]) * 100;
+                variations.push(variation);
+            }
+            
+            // Criar ou atualizar gráfico comparativo
+            const comparativeCtx = document.getElementById('comparative-monthly-chart').getContext('2d');
+            
+            if (charts.comparative) {
+                charts.comparative.destroy();
+            }
+            
+            // Configurar cores baseadas nas variações
+            const backgroundColors = volumes.map((volume, index) => {
+                if (index === 0) return 'rgba(67, 97, 238, 0.7)';
+                const variation = variations[index-1];
+                if (variation > 0) return 'rgba(40, 167, 69, 0.7)';
+                if (variation < 0) return 'rgba(220, 53, 69, 0.7)';
+                return 'rgba(108, 117, 125, 0.7)';
+            });
+            
+            const borderColors = volumes.map((volume, index) => {
+                if (index === 0) return 'rgb(67, 97, 238)';
+                const variation = variations[index-1];
+                if (variation > 0) return 'rgb(40, 167, 69)';
+                if (variation < 0) return 'rgb(220, 53, 69)';
+                return 'rgb(108, 117, 125)';
+            });
+            
+            charts.comparative = new Chart(comparativeCtx, {
+                type: currentChartType,
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Volume Total por Mês',
+                        data: volumes,
+                        backgroundColor: backgroundColors,
+                        borderColor: borderColors,
+                        borderWidth: 2,
+                        fill: currentChartType === 'line' || currentChartType === 'radar',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    const index = context.dataIndex;
+                                    let tooltipText = `Volume: ${value.toLocaleString('pt-BR')}`;
+                                    
+                                    if (index > 0) {
+                                        const variation = variations[index-1];
+                                        tooltipText += ` (${variation > 0 ? '+' : ''}${variation.toFixed(1)}% vs ${labels[index-1]})`;
+                                    }
+                                    
+                                    tooltipText += ` | Dias: ${counts[index]}`;
+                                    return tooltipText;
+                                }
+                            }
+                        }
+                    },
+                    scales: currentChartType !== 'radar' ? {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Mês'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Volume Total Expedido'
+                            },
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString('pt-BR');
+                                }
+                            }
+                        }
+                    } : {},
+                    elements: currentChartType === 'radar' ? {
+                        line: {
+                            tension: 0.4
+                        }
+                    } : {}
+                }
+            });
+            
+            // Atualizar análise de tendência
+            updateTrendAnalysis(volumes, labels, variations);
+        }
+        
+        function updateTrendAnalysis(volumes, labels, variations) {
+            if (volumes.length < 2) {
+                trendSummaryText.textContent = 'Dados insuficientes para análise de tendência. Selecione mais meses.';
+                trendInsightsList.innerHTML = '<li>Selecione pelo menos 2 meses para análise</li>';
+                trendTypeIndicator.textContent = 'Insuficiente';
+                return;
+            }
+            
+            // Calcular métricas estatísticas
+            const totalVolume = volumes.reduce((sum, vol) => sum + vol, 0);
+            const averageVolume = totalVolume / volumes.length;
+            const maxVolume = Math.max(...volumes);
+            const minVolume = Math.min(...volumes);
+            const maxVolumeIndex = volumes.indexOf(maxVolume);
+            const minVolumeIndex = volumes.indexOf(minVolume);
+            
+            // Calcular tendência geral (regressão linear simples)
+            const x = Array.from({length: volumes.length}, (_, i) => i);
+            const y = volumes;
+            const n = volumes.length;
+            
+            const xMean = x.reduce((sum, val) => sum + val, 0) / n;
+            const yMean = y.reduce((sum, val) => sum + val, 0) / n;
+            
+            let numerator = 0;
+            let denominator = 0;
+            
+            for (let i = 0; i < n; i++) {
+                numerator += (x[i] - xMean) * (y[i] - yMean);
+                denominator += Math.pow(x[i] - xMean, 2);
+            }
+            
+            const slope = denominator !== 0 ? numerator / denominator : 0;
+            const intercept = yMean - slope * xMean;
+            
+            // Calcular R²
+            let ssRes = 0;
+            let ssTot = 0;
+            
+            for (let i = 0; i < n; i++) {
+                const predicted = slope * x[i] + intercept;
+                ssRes += Math.pow(y[i] - predicted, 2);
+                ssTot += Math.pow(y[i] - yMean, 2);
+            }
+            
+            const rSquared = 1 - (ssRes / ssTot);
+            
+            // Determinar tipo de tendência
+            let trendType = '';
+            let trendTypeClass = '';
+            
+            if (slope > 0 && rSquared > 0.5) {
+                trendType = 'Crescente Forte';
+                trendTypeClass = 'positive';
+            } else if (slope > 0 && rSquared > 0.2) {
+                trendType = 'Crescente Moderada';
+                trendTypeClass = 'positive';
+            } else if (slope > 0) {
+                trendType = 'Crescente Leve';
+                trendTypeClass = 'positive';
+            } else if (slope < 0 && rSquared > 0.5) {
+                trendType = 'Decrescente Forte';
+                trendTypeClass = 'negative';
+            } else if (slope < 0 && rSquared > 0.2) {
+                trendType = 'Decrescente Moderada';
+                trendTypeClass = 'negative';
+            } else if (slope < 0) {
+                trendType = 'Decrescente Leve';
+                trendTypeClass = 'negative';
+            } else {
+                trendType = 'Estável';
+                trendTypeClass = 'neutral';
+            }
+            
+            // Atualizar indicador de tipo de tendência
+            trendTypeIndicator.textContent = trendType;
+            trendTypeIndicator.style.background = trendTypeClass === 'positive' ? 
+                'rgba(40, 167, 69, 0.1)' : trendTypeClass === 'negative' ? 
+                'rgba(220, 53, 69, 0.1)' : 'rgba(108, 117, 125, 0.1)';
+            trendTypeIndicator.style.color = trendTypeClass === 'positive' ? 
+                'var(--positive)' : trendTypeClass === 'negative' ? 
+                'var(--negative)' : 'var(--text-light)';
+            
+            // Gerar texto de resumo
+            const growthPercent = ((slope * (n-1)) / y[0]) * 100;
+            const avgVariation = variations.reduce((sum, var_) => sum + Math.abs(var_), 0) / (variations.length || 1);
+            
+            let summaryText = `Análise de ${n} meses mostra uma tendência <strong>${trendType.toLowerCase()}</strong>. `;
+            
+            if (slope > 0) {
+                summaryText += `O volume médio aumentou <strong>${growthPercent.toFixed(1)}%</strong> no período analisado. `;
+            } else if (slope < 0) {
+                summaryText += `O volume médio diminuiu <strong>${Math.abs(growthPercent).toFixed(1)}%</strong> no período analisado. `;
+            } else {
+                summaryText += `O volume médio se manteve estável no período analisado. `;
+            }
+            
+            summaryText += `O mês de maior volume foi <strong>${labels[maxVolumeIndex]}</strong> com ${maxVolume.toLocaleString('pt-BR')} unidades, `;
+            summaryText += `enquanto o menor volume foi em <strong>${labels[minVolumeIndex]}</strong> com ${minVolume.toLocaleString('pt-BR')} unidades.`;
+            
+            trendSummaryText.innerHTML = summaryText;
+            
+            // Gerar insights
+            let insightsHTML = '';
+            
+            // Insight 1: Tendência geral
+            if (slope > 1000) {
+                insightsHTML += `<li><strong>Tendência Forte de Crescimento:</strong> Aumento médio de ${(slope/1000).toFixed(1)}K unidades por mês</li>`;
+            } else if (slope > 0) {
+                insightsHTML += `<li><strong>Crescimento Constante:</strong> Aumento médio de ${slope.toFixed(0)} unidades por mês</li>`;
+            } else if (slope < -1000) {
+                insightsHTML += `<li><strong>Queda Significativa:</strong> Redução média de ${Math.abs(slope/1000).toFixed(1)}K unidades por mês</li>`;
+            } else if (slope < 0) {
+                insightsHTML += `<li><strong>Queda Moderada:</strong> Redução média de ${Math.abs(slope).toFixed(0)} unidades por mês</li>`;
+            } else {
+                insightsHTML += `<li><strong>Estabilidade:</strong> Volume médio mantido constante no período</li>`;
+            }
+            
+            // Insight 2: Variações mensais
+            if (avgVariation > 30) {
+                insightsHTML += `<li><strong>Alta Volatilidade:</strong> Variação média de ${avgVariation.toFixed(1)}% entre meses</li>`;
+            } else if (avgVariation > 15) {
+                insightsHTML += `<li><strong>Volatilidade Moderada:</strong> Variação média de ${avgVariation.toFixed(1)}% entre meses</li>`;
+            } else {
+                insightsHTML += `<li><strong>Baixa Volatilidade:</strong> Variação média de ${avgVariation.toFixed(1)}% entre meses</li>`;
+            }
+            
+            // Insight 3: Mês de pico
+            insightsHTML += `<li><strong>Mês de Pico:</strong> ${labels[maxVolumeIndex]} teve o maior volume (${maxVolume.toLocaleString('pt-BR')})</li>`;
+            
+            // Insight 4: Maior variação positiva
+            if (variations.length > 0) {
+                const maxPositiveVariation = Math.max(...variations.filter(v => v > 0));
+                const maxPositiveIndex = variations.indexOf(maxPositiveVariation);
+                
+                if (maxPositiveVariation > 0) {
+                    insightsHTML += `<li><strong>Maior Crescimento:</strong> ${labels[maxPositiveIndex+1]} cresceu ${maxPositiveVariation.toFixed(1)}% em relação a ${labels[maxPositiveIndex]}</li>`;
+                }
+            }
+            
+            // Insight 5: Maior variação negativa
+            if (variations.length > 0) {
+                const maxNegativeVariation = Math.min(...variations.filter(v => v < 0));
+                const maxNegativeIndex = variations.indexOf(maxNegativeVariation);
+                
+                if (maxNegativeVariation < 0) {
+                    insightsHTML += `<li><strong>Maior Queda:</strong> ${labels[maxNegativeIndex+1]} caiu ${Math.abs(maxNegativeVariation).toFixed(1)}% em relação a ${labels[maxNegativeIndex]}</li>`;
+                }
+            }
+            
+            trendInsightsList.innerHTML = insightsHTML;
+            
+            // Atualizar métricas
+            const metricsHTML = `
+                <div class="trend-metric">
+                    <div class="trend-metric-value">${slope > 0 ? '+' : ''}${(slope/1000).toFixed(1)}K</div>
+                    <div class="trend-metric-label">Taxa Mensal</div>
+                </div>
+                <div class="trend-metric">
+                    <div class="trend-metric-value">${growthPercent > 0 ? '+' : ''}${growthPercent.toFixed(1)}%</div>
+                    <div class="trend-metric-label">Crescimento Total</div>
+                </div>
+                <div class="trend-metric">
+                    <div class="trend-metric-value">${rSquared.toFixed(2)}</div>
+                    <div class="trend-metric-label">R² da Tendência</div>
+                </div>
+                <div class="trend-metric">
+                    <div class="trend-metric-value">${avgVariation.toFixed(1)}%</div>
+                    <div class="trend-metric-label">Volatilidade Média</div>
+                </div>
+            `;
+            
+            trendMetricsContainer.innerHTML = metricsHTML;
+            
+            // Criar gráfico de análise de tendência
+            const trendCtx = document.getElementById('trend-analysis-chart').getContext('2d');
+            
+            if (charts.trendAnalysis) {
+                charts.trendAnalysis.destroy();
+            }
+            
+            // Gerar dados previstos para linha de tendência
+            const predictedData = x.map(xVal => slope * xVal + intercept);
+            
+            charts.trendAnalysis = new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Volume Real',
+                            data: volumes,
+                            borderColor: '#4361ee',
+                            backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Tendência',
+                            data: predictedData,
+                            borderColor: trendTypeClass === 'positive' ? '#28a745' : 
+                                      trendTypeClass === 'negative' ? '#dc3545' : '#6c757d',
+                            backgroundColor: 'transparent',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.raw.toLocaleString('pt-BR')}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Mês'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Volume Total'
+                            },
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString('pt-BR');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
         function updateProbabilityAnalysis(analysis) {
             const weekdayNames = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
-            const weekdayShortNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
             
             probabilityGrid.innerHTML = '';
             
-            // Para cada dia da semana, criar um card de probabilidade
             for (let i = 0; i < 7; i++) {
                 const weekdayStats = analysis.probabilityByWeekday[i] || {
                     increases: 0,
@@ -2051,9 +3122,19 @@
                 
                 card.innerHTML = `
                     <div class="probability-day">${weekdayNames[i]}</div>
-                    <div class="probability-value increase">${increasePercent}%</div>
+                    <div class="probability-value-container">
+                        <span class="arrow-icon arrow-up arrow-up-animation">
+                            <i class="fas fa-arrow-up"></i>
+                        </span>
+                        <div class="probability-value increase">${increasePercent}%</div>
+                    </div>
                     <div class="probability-label">Probabilidade de Aumento</div>
-                    <div class="probability-value decrease">${decreasePercent}%</div>
+                    <div class="probability-value-container">
+                        <span class="arrow-icon arrow-down arrow-down-animation">
+                            <i class="fas fa-arrow-down"></i>
+                        </span>
+                        <div class="probability-value decrease">${decreasePercent}%</div>
+                    </div>
                     <div class="probability-label">Probabilidade de Queda</div>
                     <div style="margin-top: 10px; font-size: 0.8rem; color: var(--text-light);">
                         Baseado em ${weekdayStats.total} observações
@@ -2064,7 +3145,6 @@
             }
         }
         
-        // NOVA FUNÇÃO: Atualizar Análise de Dias com Maior Volume por Mês
         function updateMonthPeakAnalysis(analysis) {
             const monthNames = {
                 '01': 'Janeiro', '02': 'Fevereiro', '03': 'Março', '04': 'Abril',
@@ -2074,10 +3154,8 @@
             
             monthPeakGrid.innerHTML = '';
             
-            // Ordenar os meses por data
             const sortedMonths = Object.keys(analysis.monthPeaks).sort();
             
-            // Para cada mês, criar um card com o dia de maior volume
             sortedMonths.forEach(monthKey => {
                 const peakData = analysis.monthPeaks[monthKey];
                 const [month, year] = monthKey.split('/');
@@ -2099,14 +3177,11 @@
             });
         }
         
-        // NOVA FUNÇÃO: Atualizar Análise Estatística
         function updateStatisticalAnalysis(analysis) {
             const volumes = analysis.rawData.map(item => item.volume);
             
-            // Estatísticas Descritivas
             const stats = calculateDescriptiveStats(volumes);
             
-            // Atualizar elementos da DOM com as estatísticas
             document.getElementById('stat-mean').textContent = stats.mean.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
             document.getElementById('stat-median').textContent = stats.median.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
             document.getElementById('stat-std').textContent = stats.stdDev.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
@@ -2122,74 +3197,59 @@
             document.getElementById('stat-mode').textContent = stats.mode.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
             document.getElementById('stat-dist-type').textContent = stats.distributionType;
             
-            // Análise de Tendência
             const trendStats = calculateTrendStats(analysis.rawData);
             document.getElementById('stat-correlation').textContent = trendStats.correlation.toFixed(3);
             document.getElementById('stat-regression-slope').textContent = trendStats.regressionSlope.toFixed(2);
             document.getElementById('stat-r-squared').textContent = trendStats.rSquared.toFixed(3);
             document.getElementById('stat-p-value').textContent = trendStats.pValue.toFixed(4);
             
-            // Análise de Sazonalidade
             const seasonalStats = calculateSeasonalStats(analysis.rawData);
             document.getElementById('stat-seasonal-strength').textContent = seasonalStats.strength.toFixed(3);
             document.getElementById('stat-seasonal-period').textContent = seasonalStats.period;
             document.getElementById('stat-seasonal-variation').textContent = (seasonalStats.variation * 100).toFixed(1) + '%';
             document.getElementById('stat-seasonal-peak').textContent = seasonalStats.peak;
             
-            // Validação do Modelo
             const validationStats = calculateValidationStats(analysis.rawData);
             document.getElementById('stat-mae').textContent = validationStats.mae.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
             document.getElementById('stat-rmse').textContent = validationStats.rmse.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
             document.getElementById('stat-mape').textContent = (validationStats.mape * 100).toFixed(1) + '%';
             document.getElementById('stat-accuracy').textContent = (validationStats.accuracy * 100).toFixed(1) + '%';
             
-            // Análise Preditiva
             const predictionStats = calculatePredictionStats(analysis.rawData);
             document.getElementById('stat-pred-avg').textContent = predictionStats.average.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
             document.getElementById('stat-pred-growth').textContent = (predictionStats.growth * 100).toFixed(1) + '%';
             document.getElementById('stat-confidence-interval').textContent = '±' + predictionStats.confidenceInterval.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
             document.getElementById('stat-increase-prob').textContent = (predictionStats.increaseProbability * 100).toFixed(1) + '%';
             
-            // Criar gráfico de previsão
             createPredictionChart(predictionStats, analysis.rawData);
         }
         
-        // Funções auxiliares para cálculos estatísticos
         function calculateDescriptiveStats(data) {
             const sorted = [...data].sort((a, b) => a - b);
             const n = sorted.length;
             
-            // Média
             const mean = sorted.reduce((sum, val) => sum + val, 0) / n;
             
-            // Mediana
             const median = n % 2 === 0 
                 ? (sorted[n/2 - 1] + sorted[n/2]) / 2 
                 : sorted[Math.floor(n/2)];
             
-            // Desvio padrão
             const variance = sorted.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / n;
             const stdDev = Math.sqrt(variance);
             
-            // Coeficiente de variação
             const coefficientOfVariation = stdDev / mean;
             
-            // Mínimo, máximo e amplitude
             const min = sorted[0];
             const max = sorted[n - 1];
             const range = max - min;
             
-            // Quartis
             const q1 = sorted[Math.floor(n * 0.25)];
             const q3 = sorted[Math.floor(n * 0.75)];
             
-            // Assimetria (Skewness)
             const skewness = n > 0 ? sorted.reduce((sum, val) => sum + Math.pow((val - mean) / stdDev, 3), 0) / n : 0;
             
-            // Curtose
             const kurtosis = n > 0 ? sorted.reduce((sum, val) => sum + Math.pow((val - mean) / stdDev, 4), 0) / n - 3 : 0;
             
-            // Moda (simplificada)
             const frequency = {};
             let maxFreq = 0;
             let mode = sorted[0] || 0;
@@ -2202,7 +3262,6 @@
                 }
             });
             
-            // Tipo de distribuição
             let distributionType = 'Normal';
             if (Math.abs(skewness) > 1) {
                 distributionType = skewness > 0 ? 'Assimétrica Positiva' : 'Assimétrica Negativa';
@@ -2228,20 +3287,17 @@
         }
         
         function calculateTrendStats(data) {
-            // Implementação simplificada de análise de tendência
             const n = data.length;
             if (n < 2) {
                 return { correlation: 0, regressionSlope: 0, rSquared: 0, pValue: 1 };
             }
             
-            const x = Array.from({length: n}, (_, i) => i); // Dias como variável independente
-            const y = data.map(item => item.volume); // Volume como variável dependente
+            const x = Array.from({length: n}, (_, i) => i);
+            const y = data.map(item => item.volume);
             
-            // Médias
             const xMean = x.reduce((sum, val) => sum + val, 0) / n;
             const yMean = y.reduce((sum, val) => sum + val, 0) / n;
             
-            // Coeficientes de regressão linear
             let numerator = 0;
             let denominator = 0;
             
@@ -2253,7 +3309,6 @@
             const regressionSlope = denominator !== 0 ? numerator / denominator : 0;
             const regressionIntercept = yMean - regressionSlope * xMean;
             
-            // Coeficiente de correlação
             let sumXY = 0;
             let sumX2 = 0;
             let sumY2 = 0;
@@ -2269,11 +3324,9 @@
                 Math.sqrt((n * sumX2 - Math.pow(x.reduce((a, b) => a + b), 2)) * 
                          (n * sumY2 - Math.pow(y.reduce((a, b) => a + b), 2))) : 0;
             
-            // R²
             const rSquared = Math.pow(correlation, 2);
             
-            // p-value (simplificado)
-            const pValue = 0.05; // Valor simplificado
+            const pValue = 0.05;
             
             return {
                 correlation: correlation || 0,
@@ -2284,7 +3337,6 @@
         }
         
         function calculateSeasonalStats(data) {
-            // Implementação simplificada de análise de sazonalidade
             const volumes = data.map(item => item.volume);
             const n = volumes.length;
             
@@ -2292,7 +3344,6 @@
                 return { strength: 0, period: 'Semanal', variation: 0, peak: '' };
             }
             
-            // Médias por dia da semana
             const weekdayAverages = {};
             data.forEach(item => {
                 if (!weekdayAverages[item.dayOfWeek]) {
@@ -2302,7 +3353,6 @@
                 weekdayAverages[item.dayOfWeek].count++;
             });
             
-            // Encontrar dia com maior média
             let maxAvg = 0;
             let peakDay = '';
             const weekdayNames = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
@@ -2315,7 +3365,6 @@
                 }
             });
             
-            // Força sazonal (simplificada)
             const overallMean = volumes.reduce((sum, val) => sum + val, 0) / n;
             const seasonalStrength = maxAvg / overallMean - 1;
             
@@ -2328,7 +3377,6 @@
         }
         
         function calculateValidationStats(data) {
-            // Implementação simplificada de métricas de validação
             const volumes = data.map(item => item.volume);
             const n = volumes.length;
             
@@ -2336,7 +3384,6 @@
                 return { mae: 0, rmse: 0, mape: 0, accuracy: 1 };
             }
             
-            // Previsão simples (média móvel)
             const predictions = [];
             for (let i = 1; i < n; i++) {
                 predictions.push((volumes[i-1] + volumes[i]) / 2);
@@ -2344,16 +3391,12 @@
             
             const actuals = volumes.slice(1);
             
-            // MAE (Mean Absolute Error)
             const mae = actuals.reduce((sum, actual, i) => sum + Math.abs(actual - predictions[i]), 0) / (n - 1);
             
-            // RMSE (Root Mean Square Error)
             const rmse = Math.sqrt(actuals.reduce((sum, actual, i) => sum + Math.pow(actual - predictions[i], 2), 0) / (n - 1));
             
-            // MAPE (Mean Absolute Percentage Error)
             const mape = actuals.reduce((sum, actual, i) => sum + Math.abs((actual - predictions[i]) / actual), 0) / (n - 1);
             
-            // Acurácia (simplificada)
             const accuracy = 1 - mape;
             
             return {
@@ -2365,7 +3408,6 @@
         }
         
         function calculatePredictionStats(data) {
-            // Implementação simplificada de previsão
             const volumes = data.map(item => item.volume);
             const n = volumes.length;
             
@@ -2373,7 +3415,6 @@
                 return { average: volumes[0] || 0, growth: 0, confidenceInterval: 0, increaseProbability: 0.5, slope: 0, intercept: volumes[0] || 0 };
             }
             
-            // Tendência linear simples
             const x = Array.from({length: n}, (_, i) => i);
             const y = volumes;
             
@@ -2391,17 +3432,13 @@
             const slope = denominator !== 0 ? numerator / denominator : 0;
             const intercept = yMean - slope * xMean;
             
-            // Previsão para os próximos 30 dias
             const lastVolume = volumes[n - 1];
-            const predictedAverage = lastVolume + slope * 15; // Média dos próximos 30 dias
+            const predictedAverage = lastVolume + slope * 15;
             
-            // Crescimento esperado
             const growth = slope / lastVolume;
             
-            // Intervalo de confiança (simplificado)
-            const confidenceInterval = lastVolume * 0.1; // 10% do último valor
+            const confidenceInterval = lastVolume * 0.1;
             
-            // Probabilidade de aumento (baseada na tendência)
             const increaseProbability = slope > 0 ? 0.7 : 0.3;
             
             return {
@@ -2421,11 +3458,9 @@
                 charts.prediction.destroy();
             }
             
-            // Dados históricos (últimos 30 dias) + previsão (próximos 30 dias)
             const historicalData = data.slice(-30).map(item => item.volume);
             const historicalDates = data.slice(-30).map(item => moment(item.date).format('DD/MM'));
             
-            // Gerar previsões para os próximos 30 dias
             const lastIndex = historicalData.length - 1;
             const predictions = [];
             
@@ -2435,7 +3470,6 @@
                 );
             }
             
-            // Datas futuras
             const lastDate = data[data.length - 1].date;
             const futureDates = [];
             for (let i = 1; i <= 30; i++) {
@@ -2508,19 +3542,16 @@
             });
         }
         
-        // Gerar insights especializados para ecommerce
         function generateEcommerceInsights(analysis) {
             const weekdayNames = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
             const summaryElement = document.getElementById('trend-summary');
             const recommendationsElement = document.getElementById('recommendations');
             
-            // Análise de variações
             const positiveVariations = analysis.dailyVariations.filter(v => v.variation > 0).length;
             const negativeVariations = analysis.dailyVariations.filter(v => v.variation < 0).length;
             const totalVariations = analysis.dailyVariations.length;
             const positivePercentage = totalVariations > 0 ? ((positiveVariations / totalVariations) * 100).toFixed(1) : 0;
 
-            // Resumo estatístico
             let summaryHTML = `
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
                     <div>
@@ -2540,10 +3571,8 @@
             
             summaryElement.innerHTML = summaryHTML;
             
-            // Insights detalhados e recomendações
             let insightsHTML = '<div class="insights-grid">';
             
-            // Insight 1: Dias de maior movimento
             if (analysis.maxWeekday.day !== null) {
                 insightsHTML += `
                     <div class="insight-item">
@@ -2556,7 +3585,6 @@
                 `;
             }
             
-            // Insight 2: Dias com mais aumentos
             if (analysis.maxIncreaseWeekday.day !== null) {
                 insightsHTML += `
                     <div class="insight-item info">
@@ -2569,7 +3597,6 @@
                 `;
             }
             
-            // Insight 3: Dias com mais quedas
             if (analysis.maxDecreaseWeekday.day !== null) {
                 insightsHTML += `
                     <div class="insight-item warning">
@@ -2582,7 +3609,6 @@
                 `;
             }
             
-            // Insight 4: Picos significativos
             if (analysis.peaks.length > 0) {
                 const peakDays = [...new Set(analysis.peaks.map(p => p.weekday))];
                 insightsHTML += `
@@ -2599,7 +3625,6 @@
                 `;
             }
             
-            // Insight 5: Tendência geral
             const trendStatus = analysis.trend > 5 ? 'forte crescimento' : analysis.trend > 0 ? 'crescimento moderado' : 'estabilidade';
             insightsHTML += `
                 <div class="insight-item ${analysis.trend > 5 ? '' : analysis.trend > 0 ? 'info' : 'warning'}">
@@ -2611,7 +3636,6 @@
                 </div>
             `;
             
-            // Insight 6: Recomendações específicas para ecommerce
             const highVolumeDays = Object.entries(analysis.weekdayAverages)
                 .filter(([_, avg]) => avg > analysis.averageDaily * 1.2)
                 .map(([day, _]) => weekdayNames[day]);
@@ -2637,10 +3661,8 @@
             const tableBody = document.getElementById('data-table-body');
             tableBody.innerHTML = '';
             
-            // Ordenar os dados
             const sortedData = sortData([...data], currentSortColumn, currentSortOrder);
             
-            // Limitar a exibição a 30 registros
             const displayData = sortedData.slice(0, 30);
             const averageVolume = displayData.length > 0 ? 
                 displayData.reduce((sum, item) => sum + item.volume, 0) / displayData.length : 0;
@@ -2675,7 +3697,6 @@
                     }
                 }
                 
-                // Determinar status baseado no volume
                 if (!status) {
                     if (item.volume > averageVolume * 1.3) {
                         status = '🚀 Pico';
@@ -2715,7 +3736,6 @@
             }
         }
         
-        // Função para ordenar os dados
         function sortData(data, column, order) {
             return data.sort((a, b) => {
                 let aValue, bValue;
@@ -2740,7 +3760,6 @@
                     case 'variationPercent':
                     case 'variationVolume':
                     case 'status':
-                        // Para estas colunas, usamos o volume como base
                         aValue = a.volume;
                         bValue = b.volume;
                         break;
@@ -2749,7 +3768,6 @@
                         bValue = b.date;
                 }
                 
-                // Comparação para ordem crescente ou decrescente
                 if (order === 'asc') {
                     return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
                 } else {
